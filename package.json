@@ -1,6 +1,6 @@
 {
   "name": "iso",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Render React on the server and client using express",
   "main": "client.js",
   "author": "Josh Perez <josh@goatslacker.com>",
