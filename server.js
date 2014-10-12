@@ -2,14 +2,14 @@ var React = require('react/addons')
 var expressState = require('express-state')
 var overload = require('superoverload')
 
-function isos(app, view, routes) {
+function iso(app, view, routes) {
   if (!app) {
     throw new TypeError('Must pass in an express application')
   }
   routes = routes || {}
   view = view || ''
 
-  app.set('state namespace', 'isos')
+  app.set('state namespace', 'iso')
 
   expressState.extend(app)
 
@@ -51,4 +51,4 @@ function isos(app, view, routes) {
   }
 }
 
-module.exports = isos
+module.exports = iso

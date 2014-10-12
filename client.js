@@ -1,12 +1,12 @@
 var React = require('react')
 var Router = require('director').Router
 
-function isos(routes) {
+function iso(routes) {
   var clientRoutes = Object.keys(routes).reduce(function (x, route) {
     var component = routes[route]
     x[route] = function () {
       React.renderComponent(
-        component.call(component, window.isos),
+        component.call(component, window.iso),
         document.getElementById('app')
       )
     }
@@ -19,4 +19,4 @@ function isos(routes) {
   router.init()
 }
 
-module.exports = isos
+module.exports = iso
