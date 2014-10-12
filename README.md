@@ -19,55 +19,55 @@ server side. With iso you're not forced to use flux, MVC, or any other specific 
 
 `server.js`
 
-  // all that is required to start rendering react on the server side
-  var express = require('express')
-  var iso = require('iso/server')
+    // all that is required to start rendering react on the server side
+    var express = require('express')
+    var iso = require('iso/server')
 
-  var app = express()
-  iso(app)
+    var app = express()
+    iso(app)
 
-  // a custom react component we will render on the server and client
-  var MyReactComponent = require('./MyReactComponent')
+    // a custom react component we will render on the server and client
+    var MyReactComponent = require('./MyReactComponent')
 
-  // a sample route
-  app.get('/', function (req, res) {
-    // the special 'ship' method that iso added
-    res.ship('layout', MyReactComponent, {
-      serverTime: Date.now()
+    // a sample route
+    app.get('/', function (req, res) {
+      // the special 'ship' method that iso added
+      res.ship('layout', MyReactComponent, {
+        serverTime: Date.now()
+      })
     })
-  })
 
 `client.js`
 
-  var iso = require('iso/client')
-  var MyReactComponent = require('./MyReactComponent')
-  iso(document.getElementById('app'), MyReactComponent)
+    var iso = require('iso/client')
+    var MyReactComponent = require('./MyReactComponent')
+    iso(document.getElementById('app'), MyReactComponent)
 
 `MyReactComponent.js`
 
-  var React = require('react')
+    var React = require('react')
 
-  var MyReactComponent = React.createClass({
-    getInitialState: function () {
-      return {
-        time: this.props.serverTime
+    var MyReactComponent = React.createClass({
+      getInitialState: function () {
+        return {
+          time: this.props.serverTime
+        }
+      },
+
+      updateTime: function () {
+        this.setState({
+          time: Date.now()
+        })
+      },
+
+      render: function () {
+        return React.DOM.div({
+          onClick: this.updateTime
+        }, this.state.time)
       }
-    },
+    })
 
-    updateTime: function () {
-      this.setState({
-        time: Date.now()
-      })
-    },
-
-    render: function () {
-      return React.DOM.div({
-        onClick: this.updateTime
-      }, this.state.time)
-    }
-  })
-
-  module.exports = MyReactComponent
+    module.exports = MyReactComponent
 
 `iso/server` extends your app to provide a method to the express response object.
 The new method `ship` can be called several ways, its goal is to render the React
@@ -86,33 +86,33 @@ More about `response.ship`
 
 ship can be called in various ways:
 
-  // ship(Object)
-  ship({
-    serverTime: Date.now()
-  })
+    // ship(Object)
+    ship({
+      serverTime: Date.now()
+    })
 
-  // ship(String, Object)
-  ship('layout', {
-    serverTime: Date.now()
-  })
+    // ship(String, Object)
+    ship('layout', {
+      serverTime: Date.now()
+    })
 
-  // ship(Function, Object)
-  ship(MyReactComponent, {
-    serverTime: Date.now()
-  })
+    // ship(Function, Object)
+    ship(MyReactComponent, {
+      serverTime: Date.now()
+    })
 
-  // ship(String, Function, Object)
-  ship('layout', MyReactComponent, {
-    serverTime: Date.now()
-  })
+    // ship(String, Function, Object)
+    ship('layout', MyReactComponent, {
+      serverTime: Date.now()
+    })
 
 If you plan on omitting the view or the react component then you'll need to provide
 it to iso when extending your express application like so:
 
-  // iso(ExpressApplication, String, Routes)
-  iso(app, 'layout', {
-    '/': MyReactComponent
-  })
+    // iso(ExpressApplication, String, Routes)
+    iso(app, 'layout', {
+      '/': MyReactComponent
+    })
 
 # License
 
