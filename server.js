@@ -46,7 +46,7 @@ function iso(app, view, routes) {
     this.expose(data)
 
     this.render(view, {
-      html: React.renderComponentToString(component(data))
+      html: React.renderToString(React.createElement(component, data))
     })
   }
 }
