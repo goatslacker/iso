@@ -21,27 +21,32 @@ server side. With iso you're not forced to use flux, MVC, or any other specific 
 
     // all that is required to start rendering react on the server side
     var express = require('express')
-    var iso = require('iso/server')
-
-    var app = express()
-    iso(app)
 
     // a custom react component we will render on the server and client
-    var MyReactComponent = require('./MyReactComponent')
+    var components = {
+      'MyReactComponent': require('./MyReactComponent')
+    }
+    var iso = require('iso').server(components)
+
+    var app = express()
 
     // a sample route
     app.get('/', function (req, res) {
-      // the special 'ship' method that iso added
-      res.ship('layout', MyReactComponent, {
+      var html = iso('MyReactComponent', {
         serverTime: Date.now()
+      })
+      res.render('layout', {
+        html: html
       })
     })
 
 `client.js`
 
-    var iso = require('iso/client')
-    var MyReactComponent = require('./MyReactComponent')
-    iso(document.getElementById('app'), MyReactComponent)
+    var iso = require('../index')
+    var components = {
+      'MyReactComponent': require('./MyReactComponent')
+    }
+    iso.client(components)
 
 `MyReactComponent.js`
 
@@ -69,50 +74,16 @@ server side. With iso you're not forced to use flux, MVC, or any other specific 
 
     module.exports = MyReactComponent
 
-`iso/server` extends your app to provide a method to the express response object.
-The new method `ship` can be called several ways, its goal is to render the React
-component on the server with the data provided and pass down the data to the client
-side so it can be used to bootstrap the component.
+`iso.server` wraps the components and returns a function. This function takes two parameters
+the name/key of the component you want to use and the props you want to send to it.
+The function then returns the html markup that should be sent down to the client.
 
-`iso/client` renders a React component on the client side, it takes all the
-data that has been passed in from the server side and bootstraps the component
-on the client so it can pick up right where it left off.
+`iso.client` is a function that takes your components and then proceeds to find all
+"iso" rendered elements in your html. Those elements are then bootstrapped with the data
+that was passed in from the server and it picks up right where it left off giving you
+a live, dynamic application with no fuss.
 
-You can see full working application code in the `examples/` directory.
-
-# API
-
-More about `response.ship`
-
-ship can be called in various ways:
-
-    // ship(Object)
-    ship({
-      serverTime: Date.now()
-    })
-
-    // ship(String, Object)
-    ship('layout', {
-      serverTime: Date.now()
-    })
-
-    // ship(Function, Object)
-    ship(MyReactComponent, {
-      serverTime: Date.now()
-    })
-
-    // ship(String, Function, Object)
-    ship('layout', MyReactComponent, {
-      serverTime: Date.now()
-    })
-
-If you plan on omitting the view or the react component then you'll need to provide
-it to iso when extending your express application like so:
-
-    // iso(ExpressApplication, String, Routes)
-    iso(app, 'layout', {
-      '/': MyReactComponent
-    })
+You can see a full working demo application in the `examples/` directory.
 
 # License
 

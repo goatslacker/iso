@@ -1,3 +1,3 @@
-var iso = require('../client')
-var MyReactComponent = require('./MyReactComponent')
-iso(document.getElementById('app'), MyReactComponent)
+var iso = require('../index')
+var components = require('./components')
+iso.client(components)

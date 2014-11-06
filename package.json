@@ -2,13 +2,11 @@
   "name": "iso",
   "version": "1.1.0",
   "description": "Render React on the server and client using express",
-  "main": "client.js",
+  "main": "index.js",
   "author": "Josh Perez <josh@goatslacker.com>",
   "license": "MIT",
   "dependencies": {
-    "express-state": "^1.2.0",
-    "react": "^0.12.0",
-    "superoverload": "^0.1.3"
+    "react": "^0.12.0"
   },
   "peerDependencies": {
     "express": ">=3.x"
