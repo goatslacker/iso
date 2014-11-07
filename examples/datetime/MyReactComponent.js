@@ -16,7 +16,7 @@ var MyReactComponent = React.createClass({
   render: function () {
     return React.DOM.div({
       onClick: this.updateTime
-    }, this.state.time)
+    }, 'Click me to update the time: ' + this.state.time)
   }
 })
 

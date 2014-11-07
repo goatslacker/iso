@@ -17,18 +17,18 @@ var MyReactComponent = React.createClass({
   render: function () {
     return React.DOM.div({
       onClick: this.updateTime
-    }, this.state.time)
+    }, 'Click me to update the time: ' + this.state.time)
   }
 })
 
 module.exports = MyReactComponent
 
 },{"react":150}],2:[function(require,module,exports){
-var iso = require('../index')
+var iso = require('../../')
 var components = require('./components')
 iso.client(components)
 
-},{"../index":4,"./components":3}],3:[function(require,module,exports){
+},{"../../":4,"./components":3}],3:[function(require,module,exports){
 module.exports = {
   'MyReactComponent': require('./MyReactComponent')
 }
@@ -67,8 +67,6 @@ function client(components) {
     var name = node.dataset.component
     var props = JSON.parse(node.dataset.props)
     var component = components[name]
-
-    console.log('@', name, props, component)
 
     if (!component) {
       return
