@@ -11,7 +11,7 @@ function server(components) {
   return function (name, props) {
     var component = components[name]
     if (!component) {
-      return this.status(404).end()
+      return null
     }
 
     var markup = React.renderToStaticMarkup(React.createElement('div', {
