@@ -19,6 +19,7 @@ server side. With iso you're not forced to use flux, MVC, or any other specific 
 
 `server.js`
 
+```js
     // all that is required to start rendering react on the server side
     var express = require('express')
 
@@ -39,9 +40,11 @@ server side. With iso you're not forced to use flux, MVC, or any other specific 
         html: html
       })
     })
+```
 
 `client.js`
 
+```js
     var iso = require('../index')
     var components = {
       'MyReactComponent': require('./MyReactComponent')
@@ -73,6 +76,7 @@ server side. With iso you're not forced to use flux, MVC, or any other specific 
     })
 
     module.exports = MyReactComponent
+```
 
 `iso.server` wraps the components and returns a function. This function takes two parameters
 the name/key of the component you want to use and the props you want to send to it.
