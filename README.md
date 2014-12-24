@@ -50,9 +50,11 @@ server side. With iso you're not forced to use flux, MVC, or any other specific 
       'MyReactComponent': require('./MyReactComponent')
     }
     iso.client(components)
+```
 
 `MyReactComponent.js`
 
+```js
     var React = require('react')
 
     var MyReactComponent = React.createClass({
