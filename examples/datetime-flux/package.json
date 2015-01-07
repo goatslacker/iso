@@ -1,0 +1,35 @@
+{
+  "name": "datetime-iso",
+  "version": "1.0.0",
+  "description": "An isomorphic date/time application example",
+  "main": ".",
+  "dependencies": {
+    "alt": "^0.6.0"
+  },
+  "devDependencies": {
+    "browserify": "^8.0.3"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "browserify client.js > js/bundle.js",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/goatslacker/iso"
+  },
+  "keywords": [
+    "isomorphic",
+    "javascript",
+    "iso",
+    "flux",
+    "alt",
+    "react"
+  ],
+  "author": "Josh Perez <josh@goatslacker.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/goatslacker/iso/issues"
+  },
+  "homepage": "https://github.com/goatslacker/iso"
+}
