@@ -1,18 +1,18 @@
 {
   "name": "iso",
   "version": "2.1.0",
-  "description": "Render React on the server and client using express",
-  "main": "index.js",
+  "description": "Isomorphic applications helper",
+  "main": "dist/iso.js",
   "author": "Josh Perez <josh@goatslacker.com>",
   "license": "MIT",
-  "dependencies": {
-    "react": "^0.12.0"
+  "scripts": {
+    "build": "./node_modules/sixpack/bin/sixpack ./src/iso.js iso > dist/iso.js"
   },
-  "peerDependencies": {
-    "express": ">=3.x"
+  "devDependencies": {
+    "sixpack": "^2.0.0"
   },
   "repository": {
     "type": "git",
-    "url": "http://github.com/dogfessional/iso.git"
+    "url": "http://github.com/goatslacker/iso.git"
   }
 }

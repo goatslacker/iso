@@ -1,2 +1,2 @@
 #!/usr/bin/env node
-console.log(require('../components')(process.argv[2]))
+console.log(require('../src/components')(process.argv[2]))
