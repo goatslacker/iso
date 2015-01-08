@@ -2,7 +2,7 @@ var express = require('express')
 
 var components = require('./components')
 
-var iso = require('../../').server(components)
+var iso = require('../../lib/react').server(components)
 var app = express()
 
 var path = require('path')
