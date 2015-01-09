@@ -1,0 +1,24 @@
+{
+  "name": "iso-todomvc",
+  "version": "1.0.0",
+  "description": "Example isomorphic flux architecture using alt.",
+  "repository": "https://github.com/goatslacker/iso",
+  "main": "js/app.js",
+  "dependencies": {
+    "alt": "^0.6.0",
+    "express": "^4.10.7",
+    "jade": "^1.8.2",
+    "node-jsx": "^0.12.4",
+    "object-assign": "^2.0.0",
+    "react": "^0.12.2"
+  },
+  "devDependencies": {
+    "browserify": "^8.0.3",
+    "reactify": "^0.17.1",
+    "sixpack": "^1.0.0"
+  },
+  "scripts": {
+    "build": "browserify -t [reactify --es6] js/client.js > js/bundle.js"
+  },
+  "author": "Josh Perez <josh@goatslacker.com>"
+}
