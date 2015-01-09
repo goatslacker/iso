@@ -7,8 +7,12 @@ var routes = require('./src/routes.jsx')
 
 var alt = require('./src/alt')
 
-iso.client(function (state, container) {
-  alt.bootstrap(state)
+// Once we bootstrap the stores, we run react-router using
+// Router.HistoryLocation
+// the element is created and we just render it into the container
+// and our application is now live
+iso.client(function (state, _, container) {
+  alt.bootstrap(JSON.stringify(state))
 
   Router.run(routes, Router.HistoryLocation, function (Handler) {
     var node = React.createElement(Handler)
