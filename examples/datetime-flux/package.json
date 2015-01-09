@@ -11,7 +11,7 @@
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "browserify client.js > js/bundle.js",
+    "build": "browserify js/client.js > js/bundle.js",
     "start": "node server.js"
   },
   "repository": {

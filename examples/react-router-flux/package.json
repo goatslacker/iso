@@ -4,7 +4,7 @@
   "description": "Isomorphic date/time application with react-router and flux",
   "main": "index.js",
   "scripts": {
-    "build": "browserify -t [reactify --harmony] client.js > js/bundle.js",
+    "build": "browserify -t [reactify --harmony] js/client.js > js/bundle.js",
     "start": "node server.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
