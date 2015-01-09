@@ -7,7 +7,7 @@ var Time = require('./components/Time.jsx')
 
 var routes = (
   <Route name='home' path='/' handler={App}>
-    <Route name='hello' path='/hello' handler={Hello} />
+    <Route name='hello' path='/hello/:name?' handler={Hello} />
     <Route name='time' path='/time' handler={Time} />
   </Route>
 )

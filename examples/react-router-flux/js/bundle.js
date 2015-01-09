@@ -21,7 +21,7 @@ function server(html, data, meta) {
 
 function client(cb) {
   Array.prototype.forEach.call(document.querySelectorAll(".node-iso-v3"), function (node) {
-    return cb(node.dataset.state, node, node.dataset.meta);
+    return cb(JSON.parse(node.dataset.state), JSON.parse(node.dataset.meta), node);
   });
 }
 
@@ -80,8 +80,12 @@ var routes = require('./src/routes.jsx')
 
 var alt = require('./src/alt')
 
-iso.client(function (state, container) {
-  alt.bootstrap(state)
+// Once we bootstrap the stores, we run react-router using
+// Router.HistoryLocation
+// the element is created and we just render it into the container
+// and our application is now live
+iso.client(function (state, _, container) {
+  alt.bootstrap(JSON.stringify(state))
 
   Router.run(routes, Router.HistoryLocation, function (Handler) {
     var node = React.createElement(Handler)
@@ -24679,7 +24683,7 @@ var Time = require('./components/Time.jsx')
 
 var routes = (
   React.createElement(Route, {name: "home", path: "/", handler: App}, 
-    React.createElement(Route, {name: "hello", path: "/hello", handler: Hello}), 
+    React.createElement(Route, {name: "hello", path: "/hello/:name?", handler: Hello}), 
     React.createElement(Route, {name: "time", path: "/time", handler: Time})
   )
 )

@@ -26,13 +26,18 @@ function getNameFromServer(cb) {
 
 // Prior to running react-router we setup this route in order to handle data
 // fetching. We can pass data fetched via express' locals.
-app.get('/hello', function (req, res, next) {
-  getNameFromServer(function (name) {
-    res.locals.data = {
-      HelloStore: { name: name }
-    }
+app.get('/hello/:name?', function (req, res, next) {
+  if (req.params.name) {
+    res.locals.data = { HelloStore: { name: req.params.name } }
     next()
-  })
+  } else {
+    getNameFromServer(function (name) {
+      res.locals.data = {
+        HelloStore: { name: name }
+      }
+      next()
+    })
+  }
 })
 
 // This is where the magic happens, we take the locals data we have already
