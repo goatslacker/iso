@@ -1,6 +1,6 @@
 {
   "name": "iso",
-  "version": "2.1.0",
+  "version": "3.0.0",
   "description": "Isomorphic applications helper",
   "main": "dist/iso.js",
   "author": "Josh Perez <josh@goatslacker.com>",
