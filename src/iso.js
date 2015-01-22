@@ -21,6 +21,6 @@ function server(html, data = {}, meta = {}) {
 function client(cb) {
   Array.prototype.forEach.call(
     document.querySelectorAll('.node-iso-v3'),
-    node => cb(JSON.parse(node.dataset.state), JSON.parse(node.dataset.meta), node)
+    node => cb(JSON.parse(node.getAttribute('data-state')), JSON.parse(node.getAttribute('data-meta')), node)
   )
 }
