@@ -1,14 +1,8 @@
 var React = require('react')
 var { RouteHandler, Navigation } = require('react-router')
 
-var HelloStore = require('../stores/HelloStore')
-
 var App = React.createClass({
   mixins: [Navigation],
-
-  getInitialState() {
-    return HelloStore.getState()
-  },
 
   hi() {
     this.transitionTo('hello')
