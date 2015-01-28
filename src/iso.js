@@ -1,26 +1,66 @@
-module.exports = {
-  server: server,
-  client: client
-}
-
 var escapeTextForBrowser = require('react/lib/escapeTextForBrowser')
 
-function server(html, data = {}, meta = {}) {
-  var xState = escapeTextForBrowser(JSON.stringify(data))
-  var xMeta = escapeTextForBrowser(JSON.stringify(meta))
+let each = (x, f) => Array.prototype.forEach.call(x, f)
+let parse = (node, x) => JSON.parse(node.getAttribute(x))
 
-  return (
-`<div class="node-iso-v3"
-      data-state="${xState}"
-      data-meta="${xMeta}">
-  ${html}
-</div>`
-  )
+class Iso {
+  constructor() {
+    this.html = []
+    this.data = []
+  }
+
+  add(html, _state = {}, _meta = {}) {
+    var state = escapeTextForBrowser(JSON.stringify(_state))
+    var meta = escapeTextForBrowser(JSON.stringify(_meta))
+    this.html.push(html)
+    this.data.push({ state, meta })
+    return this
+  }
+
+  render() {
+    var markup = this.html.reduce((markup, html, i) => {
+      return markup + `<div class="___iso-html___" data-key="${i}">${html}</div>`
+    }, '')
+
+    var data = this.data.reduce((nodes, data, i) => {
+      var { state, meta } = data
+      return nodes + `<div class="___iso-state___" data-key="${i}" data-meta="${meta}" data-state="${state}"></div>`
+    }, '')
+
+    return markup + data
+  }
+
+  static render(html, state = {}, meta = {}) {
+    return new Iso().add(html, state, meta).render()
+  }
+
+  static bootstrap(onNode) {
+    if (!onNode) {
+      return
+    }
+
+    var nodes = document.querySelectorAll('.___iso-html___')
+    var state = document.querySelectorAll('.___iso-state___')
+
+    var cache = {}
+
+    each(state, function (node) {
+      var meta = parse(node, 'data-meta')
+      var state = parse(node, 'data-state')
+      cache[node.getAttribute('data-key')] = { meta, state }
+    })
+
+    each(nodes, function (node) {
+      var key = node.getAttribute('data-key')
+      if (!cache[key]) {
+        return
+      }
+      var { meta, state } = cache[key]
+      onNode(state, meta, node)
+    })
+
+    cache = null
+  }
 }
 
-function client(cb) {
-  Array.prototype.forEach.call(
-    document.querySelectorAll('.node-iso-v3'),
-    node => cb(JSON.parse(node.getAttribute('data-state')), JSON.parse(node.getAttribute('data-meta')), node)
-  )
-}
+module.exports = Iso

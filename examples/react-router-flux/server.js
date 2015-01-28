@@ -3,7 +3,7 @@ require('node-jsx').install({ extension: '.jsx', harmony: true })
 var Router = require('react-router')
 var React = require('react')
 var express = require('express')
-var iso = require('../../')
+var Iso = require('../../')
 
 var routes = require('./src/routes')
 var alt = require('./src/alt')
@@ -40,6 +40,13 @@ app.get('/hello/:name?', function (req, res, next) {
   }
 })
 
+app.get('/time', function (req, res, next) {
+  res.locals.data = {
+    TimeStore: { time: Date.now() }
+  }
+  next()
+})
+
 // This is where the magic happens, we take the locals data we have already
 // fetched and seed our stores with data.
 // Next we use react-router to run the URL that is provided in routes.jsx
@@ -48,10 +55,14 @@ app.get('/hello/:name?', function (req, res, next) {
 app.use(function (req, res) {
   alt.bootstrap(JSON.stringify(res.locals.data || {}))
 
+  var iso = new Iso()
+
   Router.run(routes, req.url, function (Handler) {
     var content = React.renderToString(React.createElement(Handler))
+    iso.add(content, res.locals.data)
+
     res.render('layout', {
-      html: iso.server(content, res.locals.data)
+      html: iso.render()
     })
   })
 })

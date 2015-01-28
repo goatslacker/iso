@@ -17,7 +17,7 @@ var App = React.createClass({
       <div>
         <a href="#" onClick={this.hi}>Say hi</a>
         <br />
-        <a href="#" onClick={this.time}>What time is it?</a>
+        <a href="/time" onClick={this.time}>What time is it?</a>
         <br />
         <RouteHandler {...this.props} />
       </div>

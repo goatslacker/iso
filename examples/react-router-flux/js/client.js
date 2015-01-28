@@ -1,4 +1,4 @@
-var iso = require('../../../')
+var Iso = require('../../../')
 
 var Router = require('react-router')
 var React = require('react')
@@ -11,7 +11,7 @@ var alt = require('../src/alt')
 // Router.HistoryLocation
 // the element is created and we just render it into the container
 // and our application is now live
-iso.client(function (state, _, container) {
+Iso.bootstrap(function (state, _, container) {
   alt.bootstrap(JSON.stringify(state))
 
   Router.run(routes, Router.HistoryLocation, function (Handler) {

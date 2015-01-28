@@ -3,27 +3,84 @@
 !function(e){if("object"==typeof exports&&"undefined"!=typeof module)module.exports=e();else if("function"==typeof define&&define.amd)define([],e);else{var f;"undefined"!=typeof window?f=window:"undefined"!=typeof global?f=global:"undefined"!=typeof self&&(f=self),f.iso=e()}}(function(){var define,module,exports;return (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(_dereq_,module,exports){
 "use strict";
 
-module.exports = {
-  server: server,
-  client: client
-};
-
 var escapeTextForBrowser = _dereq_("react/lib/escapeTextForBrowser");
 
-function server(html, data, meta) {
-  if (data === undefined) data = {};
-  if (meta === undefined) meta = {};
-  var xState = escapeTextForBrowser(JSON.stringify(data));
-  var xMeta = escapeTextForBrowser(JSON.stringify(meta));
+var each = function (x, f) {
+  return Array.prototype.forEach.call(x, f);
+};
+var parse = function (node, x) {
+  return JSON.parse(node.getAttribute(x));
+};
 
-  return ("<div class=\"node-iso-v3\"\n      data-state=\"" + xState + "\"\n      data-meta=\"" + xMeta + "\">\n  " + html + "\n</div>");
-}
+var Iso = (function () {
+  var Iso = function Iso() {
+    this.html = [];
+    this.data = [];
+  };
 
-function client(cb) {
-  Array.prototype.forEach.call(document.querySelectorAll(".node-iso-v3"), function (node) {
-    return cb(node.dataset.state, node, node.dataset.meta);
-  });
-}
+  Iso.prototype.add = function (html, _state, _meta) {
+    if (_state === undefined) _state = {};
+    if (_meta === undefined) _meta = {};
+    var state = escapeTextForBrowser(JSON.stringify(_state));
+    var meta = escapeTextForBrowser(JSON.stringify(_meta));
+    this.html.push(html);
+    this.data.push({ state: state, meta: meta });
+    return this;
+  };
+
+  Iso.prototype.render = function () {
+    var markup = this.html.reduce(function (markup, html, i) {
+      return markup + ("<div class=\"___iso-html___\" data-key=\"" + i + "\">" + html + "</div>");
+    }, "");
+
+    var data = this.data.reduce(function (nodes, data, i) {
+      var state = data.state;
+      var meta = data.meta;
+      return nodes + ("<div class=\"___iso-state___\" data-key=\"" + i + "\" data-meta=\"" + meta + "\" data-state=\"" + state + "\"></div>");
+    }, "");
+
+    return markup + data;
+  };
+
+  Iso.render = function (html, state, meta) {
+    if (state === undefined) state = {};
+    if (meta === undefined) meta = {};
+    return new Iso().add(html, state, meta).render();
+  };
+
+  Iso.bootstrap = function (onNode) {
+    if (!onNode) {
+      return;
+    }
+
+    var nodes = document.querySelectorAll(".___iso-html___");
+    var state = document.querySelectorAll(".___iso-state___");
+
+    var cache = {};
+
+    each(state, function (node) {
+      var meta = parse(node, "data-meta");
+      var state = parse(node, "data-state");
+      cache[node.getAttribute("data-key")] = { meta: meta, state: state };
+    });
+
+    each(nodes, function (node) {
+      var key = node.getAttribute("data-key");
+      if (!cache[key]) {
+        return;
+      }
+      var meta = cache[key].meta;
+      var state = cache[key].state;
+      onNode(state, meta, node);
+    });
+
+    cache = null;
+  };
+
+  return Iso;
+})();
+
+module.exports = Iso;
 
 },{"react/lib/escapeTextForBrowser":2}],2:[function(_dereq_,module,exports){
 /**
@@ -111,7 +168,7 @@ module.exports = {
   client: client
 }
 
-var iso = require('../')
+var Iso = require('../')
 var React = require('react')
 
 function server(components) {
@@ -123,15 +180,13 @@ function server(components) {
       return null
     }
     var element = React.createElement(component, props)
-    var markup = React.renderToStaticMarkup(element)
-    return iso.server(markup, props, { name: name })
+    var markup = React.renderToString(element)
+    return Iso.render(markup, props, { name: name })
   }
 }
 
 function client(components) {
-  iso.client(function (props, container, meta) {
-    var props = JSON.parse(props)
-    var meta = JSON.parse(meta)
+  Iso.bootstrap(function (props, meta, container) {
     var name = meta.name
 
     var component = components[name]

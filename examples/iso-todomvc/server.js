@@ -3,7 +3,7 @@ require('node-jsx').install({ harmony: true })
 var express = require('express')
 var React = require('react')
 
-var iso = require('../../')
+var Iso = require('../../')
 var alt = require('./js/alt')
 var app = express()
 
@@ -25,7 +25,7 @@ app.get('/', function (req, res) {
 
     var markup = React.renderToStaticMarkup(React.createElement(TodoApp))
     res.render('index', {
-      html: iso.server(markup, data)
+      html: Iso.render(markup, data)
     })
   })
 })
