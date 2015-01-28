@@ -1,24 +1,19 @@
 var alt = require('../alt')
 var TimeActions = require('../actions/TimeActions')
 
-function TimeStore() {
-  this.bindActions(TimeActions)
-  this.time = 0
-  this.asyncValue = undefined
-}
+class TimeStore {
+  constructor() {
+    this.bindActions(TimeActions)
+    this.time = 0
+    this.asyncValue = undefined
+  }
 
-TimeStore.prototype.onUpdateTime = function (time) {
-  this.time = time
-}
+  onUpdateTime(time) {
+    this.time = time
+  }
 
-TimeStore.prototype.onSetAsync = function (n) {
-  this.asyncValue = n
-}
-
-TimeStore.prototype.getState = function () {
-  return {
-    time: this.time,
-    foo: this.foo
+  onSetAsync(n) {
+    this.asyncValue = n
   }
 }
 

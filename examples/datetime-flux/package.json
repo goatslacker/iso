@@ -4,15 +4,18 @@
   "description": "An isomorphic date/time application example",
   "main": ".",
   "dependencies": {
-    "alt": "^0.6.0"
+    "alt": "^0.6.0",
+    "react": "^0.13.0-beta.1"
   },
   "devDependencies": {
+    "6to5": "^3.0.8",
+    "6to5ify": "^4.0.0",
     "browserify": "^8.0.3"
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "browserify js/client.js > js/bundle.js",
-    "start": "node server.js"
+    "build": "node node_modules/browserify/bin/cmd.js -t [6to5ify] js/client.js > js/bundle.js",
+    "start": "./node_modules/6to5/bin/6to5-node server.js"
   },
   "repository": {
     "type": "git",

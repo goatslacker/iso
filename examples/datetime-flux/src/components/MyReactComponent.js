@@ -1,33 +1,33 @@
-var React = require('react')
+let React = require('react')
 
-var TimeActions = require('../actions/TimeActions')
-var TimeStore = require('../stores/TimeStore')
+let TimeActions = require('../actions/TimeActions')
+let TimeStore = require('../stores/TimeStore')
 
-var MyReactComponent = React.createClass({
-  getInitialState: function () {
-    return TimeStore.getState()
-  },
-
-  componentDidMount: function () {
-    TimeStore.listen(this.onChange)
-  },
-
-  onChange: function () {
-    this.setState(this.getInitialState())
-  },
-
-  updateTime: function () {
-    TimeActions.updateTime(Date.now())
-  },
-
-  render: function () {
-    return React.DOM.div({
-      onClick: this.updateTime
-    }, [
-      React.DOM.div({ key: 1 }, 'Click me to update the time: ' + this.state.time),
-      React.DOM.div({ key: 2 }, 'Unique ID? ' + this.state.asyncValue)
-    ])
+class MyReactComponent extends React.Component {
+  constructor() {
+    this.state = TimeStore.getState()
   }
-})
+
+  componentDidMount() {
+    TimeStore.listen(() => this.setState(TimeStore.getState()))
+  }
+
+  componentWillUnmount() {
+    TimeStore.unlisten(() => this.setState(TimeStore.getState()))
+  }
+
+  updateTime() {
+    TimeActions.updateTime(Date.now())
+  }
+
+  render() {
+    return (
+      <div onClick={this.updateTime}>
+        <div>{`Click me to update the time: ${this.state.time}`}</div>
+        <div>{`This is a unique ID: ${this.state.asyncValue}`}</div>
+      </div>
+    )
+  }
+}
 
 module.exports = MyReactComponent
