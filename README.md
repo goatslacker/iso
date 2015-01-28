@@ -2,21 +2,43 @@
 
 > Barebones isomorphic JavaScript helper
 
-Iso only has two methods `client` and `server`
+Iso is a class. You instantiate it, add your markup, add some data to go with it, and render it.
+On the clientside Iso bootstraps picks up what you sent down and gives it back to you so you can bring your content to life.
 
 ## API
 
-### function server(html: string, data = {}: object, meta = {}: object): string
+### Iso#add(html: string, data: ?object, meta: ?object): this
 
-You provide the markup to `server` and some data you wish to pass down, and iso will return the markup needed to render.
+You provide the markup to `add` and some data you wish to pass down, and iso will save it internally.
 
-### function client(cb: function): undefined
+### Iso#render(): string
 
-`client` only takes in a callback which calls back with the data, meta, and a reference the container node on the DOM.
+Once you're ready to collect your html you call `render` and a string will be returned to you.
+
+### Iso.bootstrap(onNode: function)
+
+This function takes a callback which is then called with the data, the meta, and a reference to the container node on the DOM.
 
 ## Usage
 
 Iso is very barebones leaving some implementation details to the developer. There is a [React plugin included](lib/react.js) which makes creating isomorphic React components easier.
+
+Sample:
+
+```js
+// server.js
+var iso = new Iso()
+
+request.get('/', function (req, res) {
+  iso.add('<div>Hello, World!</div>', { someSampleData: 'Hello, World!' }, { id: 'hello' })
+  res.render(iso.render())
+})
+
+// client.js
+Iso.bootstrap(function (state, meta, node) {
+  // Now I do something with this data, perhaps run it through some library and then append the result to node?
+})
+```
 
 ## Examples
 
