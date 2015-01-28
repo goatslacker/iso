@@ -1,6 +1,6 @@
 {
   "name": "datetime-flux-iso",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "description": "An isomorphic date/time application example",
   "main": ".",
   "dependencies": {
