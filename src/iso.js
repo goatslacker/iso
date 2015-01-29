@@ -44,13 +44,13 @@ class Iso {
 
     var cache = {}
 
-    each(state, function (node) {
+    each(state, (node) => {
       var meta = parse(node, 'data-meta')
       var state = parse(node, 'data-state')
       cache[node.getAttribute('data-key')] = { meta, state }
     })
 
-    each(nodes, function (node) {
+    each(nodes, (node) => {
       var key = node.getAttribute('data-key')
       if (!cache[key]) {
         return
@@ -60,6 +60,14 @@ class Iso {
     })
 
     cache = null
+  }
+
+  static on(metaKey, metaValue, onNode) {
+    Iso.bootstrap((state, meta, node) => {
+      if (meta[metaKey] && meta[metaKey] === metaValue) {
+        onNode(state, meta, node)
+      }
+    })
   }
 }
 

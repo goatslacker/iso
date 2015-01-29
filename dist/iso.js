@@ -75,6 +75,14 @@ var Iso = (function () {
     cache = null;
   };
 
+  Iso.on = function (metaKey, metaValue, onNode) {
+    Iso.bootstrap(function (state, meta, node) {
+      if (meta[metaKey] && meta[metaKey] === metaValue) {
+        onNode(state, meta, node);
+      }
+    });
+  };
+
   return Iso;
 })();
 
@@ -93,14 +101,14 @@ module.exports = Iso;
  * @typechecks static-only
  */
 
-"use strict";
+'use strict';
 
 var ESCAPE_LOOKUP = {
-  "&": "&amp;",
-  ">": "&gt;",
-  "<": "&lt;",
-  "\"": "&quot;",
-  "'": "&#x27;"
+  '&': '&amp;',
+  '>': '&gt;',
+  '<': '&lt;',
+  '"': '&quot;',
+  '\'': '&#x27;'
 };
 
 var ESCAPE_REGEX = /[&><"']/g;
