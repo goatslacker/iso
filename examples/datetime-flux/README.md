@@ -31,21 +31,21 @@ TimeAction.updateTime(Date.now(), function () {
 Another challenge is that in flux stores are singletons. Pairing singleton data stores with concurrent requests is a recipe for disaster. One way of solving this dilemma is to create instances of these stores, but then the trade-off is that you're passing these instances around each component so they have a reference to the data and can use the appropriate store. This is both fragile and cumbersome.
 
 ```js
-var App = React.createClass({
+class App extends React.Component {
   render() {
     return <TimeComponent fluxInstance={fluxImplementation} />
   }
-})
+}
 
-var TimeComponent = React.createClass({
-  getInitialState() {
-    return this.props.fluxInstance.getStore('TimeStore').getState()
-  },
-
+class TimeComponent extends React.Component {
+  constructor(props) {
+    this.state = props.fluxInstance.getStore('TimeStore').getState()
+  }
+  
   render() {
     return <div>{this.state.time}</div>
   }
-})
+}
 ```
 
 Fortunately, flux's stores work very well when they are synchronous. This means we can seed the stores with data, render our application, and then revert the stores to their previous virgin state. [Alt](https://github.com/goatslacker/alt) is a flux implementation that facilitates this.
@@ -56,15 +56,15 @@ alt uses a method called `bootstrap` which seeds the stores with data on the ser
 // yay, references and plain old require!
 var TimeStore = require('../stores/TimeStore')
 
-var TimeComponent = React.createClass({
-  getInitialState() {
-    return TimeStore.getState()
-  },
-
+class TimeComponent extends React.Component {
+  constructor() {
+    this.state = TimeStore.getState()
+  }
+  
   render() {
     return <div>{this.state.time}</div>
   }
-})
+}
 ```
 
 Actions then are meant to only be used on the client-side once the application starts. On the server you can perform all the necessary data gathering, and once complete you seed the data.
