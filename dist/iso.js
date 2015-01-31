@@ -37,7 +37,7 @@ var Iso = (function () {
       return nodes + ("<div class=\"___iso-state___\" data-key=\"" + i + "\" data-meta=\"" + meta + "\" data-state=\"" + state + "\"></div>");
     }, "");
 
-    return markup + data;
+    return ("\n" + markup + "\n" + data + "\n");
   };
 
   Iso.render = function (html, state, meta) {
@@ -101,14 +101,14 @@ module.exports = Iso;
  * @typechecks static-only
  */
 
-'use strict';
+"use strict";
 
 var ESCAPE_LOOKUP = {
-  '&': '&amp;',
-  '>': '&gt;',
-  '<': '&lt;',
-  '"': '&quot;',
-  '\'': '&#x27;'
+  "&": "&amp;",
+  ">": "&gt;",
+  "<": "&lt;",
+  "\"": "&quot;",
+  "'": "&#x27;"
 };
 
 var ESCAPE_REGEX = /[&><"']/g;

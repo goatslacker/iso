@@ -27,7 +27,12 @@ class Iso {
       return nodes + `<div class="___iso-state___" data-key="${i}" data-meta="${meta}" data-state="${state}"></div>`
     }, '')
 
-    return markup + data
+    return (
+`
+${markup}
+${data}
+`
+    )
   }
 
   static render(html, state = {}, meta = {}) {
