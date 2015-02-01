@@ -21,8 +21,6 @@ This function takes a callback which is then called with the data, the meta, and
 
 ## Usage
 
-Iso is very barebones leaving some implementation details to the developer. There is a [React plugin included](lib/react.js) which makes creating isomorphic React components easier.
-
 Sample:
 
 ```js
