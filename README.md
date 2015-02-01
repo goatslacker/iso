@@ -1,5 +1,7 @@
 # Iso
 
+[![Gitter](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/goatslacker/iso?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+
 > Barebones isomorphic JavaScript helper
 
 Iso is a class. You instantiate it, add your markup, add some data to go with it, and render it.
