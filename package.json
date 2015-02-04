@@ -6,10 +6,10 @@
   "author": "Josh Perez <josh@goatslacker.com>",
   "license": "MIT",
   "scripts": {
-    "build": "./node_modules/sixpack/bin/sixpack ./src/iso.js iso > dist/iso.js; node_modules/uglify-js/bin/uglifyjs dist/iso.js -m > dist/iso.min.js"
+    "build": "6to5 ./src/iso.js > dist/iso.js; uglifyjs dist/iso.js -m > dist/iso.min.js"
   },
   "devDependencies": {
-    "sixpack": "^2.0.0",
+    "6to5": "^3.3.9",
     "uglify-js": "^2.4.16"
   },
   "repository": {

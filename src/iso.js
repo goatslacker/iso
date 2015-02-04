@@ -1,4 +1,4 @@
-var escapeTextForBrowser = require('react/lib/escapeTextForBrowser')
+let escapeTextForBrowser = require('react/lib/escapeTextForBrowser')
 
 let each = (x, f) => Array.prototype.forEach.call(x, f)
 let parse = (node, x) => JSON.parse(node.getAttribute(x))
@@ -10,20 +10,20 @@ class Iso {
   }
 
   add(html, _state = {}, _meta = {}) {
-    var state = escapeTextForBrowser(JSON.stringify(_state))
-    var meta = escapeTextForBrowser(JSON.stringify(_meta))
+    let state = escapeTextForBrowser(JSON.stringify(_state))
+    let meta = escapeTextForBrowser(JSON.stringify(_meta))
     this.html.push(html)
     this.data.push({ state, meta })
     return this
   }
 
   render() {
-    var markup = this.html.reduce((markup, html, i) => {
+    let markup = this.html.reduce((markup, html, i) => {
       return markup + `<div class="___iso-html___" data-key="${i}">${html}</div>`
     }, '')
 
-    var data = this.data.reduce((nodes, data, i) => {
-      var { state, meta } = data
+    let data = this.data.reduce((nodes, data, i) => {
+      let { state, meta } = data
       return nodes + `<div class="___iso-state___" data-key="${i}" data-meta="${meta}" data-state="${state}"></div>`
     }, '')
 
@@ -44,23 +44,23 @@ ${data}
       return
     }
 
-    var nodes = document.querySelectorAll('.___iso-html___')
-    var state = document.querySelectorAll('.___iso-state___')
+    let nodes = document.querySelectorAll('.___iso-html___')
+    let state = document.querySelectorAll('.___iso-state___')
 
-    var cache = {}
+    let cache = {}
 
     each(state, (node) => {
-      var meta = parse(node, 'data-meta')
-      var state = parse(node, 'data-state')
+      let meta = parse(node, 'data-meta')
+      let state = parse(node, 'data-state')
       cache[node.getAttribute('data-key')] = { meta, state }
     })
 
     each(nodes, (node) => {
-      var key = node.getAttribute('data-key')
+      let key = node.getAttribute('data-key')
       if (!cache[key]) {
         return
       }
-      var { meta, state } = cache[key]
+      let { meta, state } = cache[key]
       onNode(state, meta, node)
     })
 
