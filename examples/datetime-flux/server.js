@@ -1,8 +1,9 @@
 var express = require('express')
 
-var components = require('./components')
+var React = require('react')
+var AltIsomorphicElement = require('./src/components/AltIsomorphicElement')
 
-var iso = require('../../lib/react').server(components)
+var Iso = require('../../')
 var app = express()
 
 // This is express boilerplate to make our bundled JS available as well
@@ -36,8 +37,12 @@ app.get('/', function (req, res) {
       }
     }
 
+    var node = React.createElement(AltIsomorphicElement, {
+      altStores: data
+    })
+
     res.render('layout', {
-      html: iso('AltIsomorphicElement', { altStores: data })
+      html: Iso.render(React.renderToString(node), { altStores: data }, { react: true })
     })
   })
 })

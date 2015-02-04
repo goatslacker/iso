@@ -1,6 +1,6 @@
 var React = require('react')
 var alt = require('../alt')
-var IsomorphicMixin = require('alt/IsomorphicMixin')
+var IsomorphicMixin = require('alt/mixins/IsomorphicMixin')
 
 var MyReactComponent = require('./MyReactComponent')
 
