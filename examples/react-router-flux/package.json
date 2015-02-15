@@ -12,6 +12,7 @@
   "license": "MIT",
   "dependencies": {
     "alt": "^0.10.2",
+    "express": "^4.11.2",
     "jade": "^1.8.2",
     "node-jsx": "^0.12.4",
     "react": "^0.12.2",
