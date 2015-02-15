@@ -3,7 +3,7 @@ let escapeTextForBrowser = require('react/lib/escapeTextForBrowser')
 let each = (x, f) => Array.prototype.forEach.call(x, f)
 let parse = (node, x) => JSON.parse(node.getAttribute(x))
 
-class Iso {
+export default class Iso {
   constructor() {
     this.html = []
     this.data = []
@@ -75,5 +75,3 @@ ${data}
     })
   }
 }
-
-module.exports = Iso
