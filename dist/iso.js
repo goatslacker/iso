@@ -53,8 +53,9 @@ var Iso = (function () {
           if (!cache[key]) {
             return;
           }
-          var meta = cache[key].meta;
-          var state = cache[key].state;
+          var _cache$key = cache[key];
+          var meta = _cache$key.meta;
+          var state = _cache$key.state;
           onNode(state, meta, node);
         });
 
