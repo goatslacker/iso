@@ -5,17 +5,19 @@
   "main": ".",
   "dependencies": {
     "alt": "^0.10.2",
+    "express": "^4.11.2",
+    "jade": "^1.9.2",
     "react": "^0.13.0-beta.1"
   },
   "devDependencies": {
-    "6to5": "^3.3.9",
-    "6to5ify": "^4.1.0",
+    "babel": "^4.0.1",
+    "babelify": "^5.0.3",
     "browserify": "^8.0.3"
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "browserify -t [6to5ify] js/client.js > js/bundle.js",
-    "start": "6to5-node server.js"
+    "build": "browserify -t [babelify] js/client.js > js/bundle.js",
+    "start": "babel-node server.js"
   },
   "repository": {
     "type": "git",
