@@ -15,5 +15,8 @@
   "repository": {
     "type": "git",
     "url": "http://github.com/goatslacker/iso.git"
+  },
+  "dependencies": {
+    "react": "^0.12.2"
   }
 }
