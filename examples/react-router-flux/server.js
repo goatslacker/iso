@@ -20,7 +20,7 @@ app.use('/js', express.static(path.join(__dirname, 'js')))
 // Simulate an asynchronous event that takes 200ms to complete
 function getNameFromServer(cb) {
   setTimeout(function () {
-    cb('Josh')
+    cb('Server')
   }, 200)
 }
 
@@ -67,4 +67,6 @@ app.use(function (req, res) {
   })
 })
 
-app.listen(8080)
+app.listen(8080, function () {
+  console.log('Listening on localhost:8080')
+})
