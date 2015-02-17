@@ -59,7 +59,7 @@ app.use(function (req, res) {
 
   Router.run(routes, req.url, function (Handler) {
     var content = React.renderToString(React.createElement(Handler))
-    iso.add(content, res.locals.data)
+    iso.add(content, alt.flush())
 
     res.render('layout', {
       html: iso.render()
