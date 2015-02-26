@@ -1,23 +1,13 @@
 var React = require('react')
-var { RouteHandler, Navigation } = require('react-router')
+var { RouteHandler, Link } = require('react-router')
 
 var App = React.createClass({
-  mixins: [Navigation],
-
-  hi() {
-    this.transitionTo('hello')
-  },
-
-  time() {
-    this.transitionTo('time')
-  },
-
   render() {
     return (
       <div>
-        <a href="#" onClick={this.hi}>Say hi</a>
+        <Link to='hello'>Say hi</Link>
         <br />
-        <a href="/time" onClick={this.time}>What time is it?</a>
+        <Link to='time'>What time is it?</Link>
         <br />
         <RouteHandler {...this.props} />
       </div>

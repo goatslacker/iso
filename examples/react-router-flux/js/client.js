@@ -12,7 +12,7 @@ var alt = require('../src/alt')
 // the element is created and we just render it into the container
 // and our application is now live
 Iso.bootstrap(function (state, _, container) {
-  alt.bootstrap(JSON.stringify(state))
+  alt.bootstrap(state)
 
   Router.run(routes, Router.HistoryLocation, function (Handler) {
     var node = React.createElement(Handler)
