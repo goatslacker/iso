@@ -2,10 +2,10 @@
 
 [![Gitter](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/goatslacker/iso?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
-> Barebones isomorphic JavaScript helper
+> A helper class that allows you to hand off data from server to client.
 
 Iso is a class. You instantiate it, add your markup, add some data to go with it, and render it.
-On the clientside Iso bootstraps picks up what you sent down and gives it back to you so you can bring your content to life.
+On the clientside Iso picks up what you sent down and gives it back to you so you can bring your content to life.
 
 ## API
 
