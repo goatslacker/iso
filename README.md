@@ -42,13 +42,13 @@ Iso.bootstrap(function (state, meta, node) {
 
 ## Examples
 
-## [datetime](examples/datetime)
-
-Datetime is a minimal example showing how to render a React component on the server and then picking it back up on the client. It includes a click handler which updates the time, this click handler is initialized on the client. This example makes use of the [react plugin](lib/react.js).
-
 ## [datetime-flux](examples/datetime-flux)
 
-Datetime-flux is the same datetime example but using flux implementation [alt](https://github.com/goatslacker/alt). It seeds the stores with initial data on the server and then bootstraps them back on the client. The interaction is the same, a click handler is included which changes the time onClick.
+Datetime-flux is a minimal example showing how to render a React component on the server and then picking it back up on the client using flux implementation [alt](https://github.com/goatslacker/alt). It seeds the stores with initial data on the server and then bootstraps them back on the client. It includes a click handler which updates the time, this click handler is initialized on the client.
+
+## [iso-todomvc](examples/iso-todomvc)
+
+Iso-todomvc is todomvc written to work with [alt](https://github.com/goatslacker/alt). It is mostly the same code as [flux's todomvc](https://github.com/facebook/flux/tree/master/examples/flux-todomvc) and only a couple of lines in the view layer have changed. The bulk of the changes were in the store and actions, and the removal of the dispatcher and the constants since [alt](https://github.com/goatslacker/alt) handles those two for you.
 
 ## [react-router-flux](examples/react-router-flux)
 

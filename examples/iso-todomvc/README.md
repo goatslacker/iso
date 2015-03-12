@@ -168,10 +168,10 @@ Build a package
 npm run build
 ```
 
-Open index.html in your browser
+Run the server and open http://localhost:8080 in your browser
 
 ```
-open index.html
+npm start
 ```
 
 ## Credit
