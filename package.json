@@ -17,6 +17,6 @@
     "url": "http://github.com/goatslacker/iso.git"
   },
   "dependencies": {
-    "react": "^0.12.2"
+    "escape-html": "^1.0.1"
   }
 }

@@ -1,7 +1,7 @@
-let escapeTextForBrowser = require('react/lib/escapeTextForBrowser')
+const escapeTextForBrowser = require('escape-html')
 
-let each = (x, f) => Array.prototype.forEach.call(x, f)
-let parse = (node, x) => JSON.parse(node.getAttribute(x))
+const each = (x, f) => Array.prototype.forEach.call(x, f)
+const parse = (node, x) => JSON.parse(node.getAttribute(x))
 
 export default class Iso {
   constructor() {
@@ -10,20 +10,20 @@ export default class Iso {
   }
 
   add(html, _state = {}, _meta = {}) {
-    let state = escapeTextForBrowser(JSON.stringify(_state))
-    let meta = escapeTextForBrowser(JSON.stringify(_meta))
+    const state = escapeTextForBrowser(JSON.stringify(_state))
+    const meta = escapeTextForBrowser(JSON.stringify(_meta))
     this.html.push(html)
     this.data.push({ state, meta })
     return this
   }
 
   render() {
-    let markup = this.html.reduce((markup, html, i) => {
+    const markup = this.html.reduce((markup, html, i) => {
       return markup + `<div class="___iso-html___" data-key="${i}">${html}</div>`
     }, '')
 
-    let data = this.data.reduce((nodes, data, i) => {
-      let { state, meta } = data
+    const data = this.data.reduce((nodes, data, i) => {
+      const { state, meta } = data
       return nodes + `<div class="___iso-state___" data-key="${i}" data-meta="${meta}" data-state="${state}"></div>`
     }, '')
 
@@ -44,23 +44,23 @@ ${data}
       return
     }
 
-    let nodes = document.querySelectorAll('.___iso-html___')
-    let state = document.querySelectorAll('.___iso-state___')
+    const nodes = document.querySelectorAll('.___iso-html___')
+    const state = document.querySelectorAll('.___iso-state___')
 
     let cache = {}
 
     each(state, (node) => {
-      let meta = parse(node, 'data-meta')
-      let state = parse(node, 'data-state')
+      const meta = parse(node, 'data-meta')
+      const state = parse(node, 'data-state')
       cache[node.getAttribute('data-key')] = { meta, state }
     })
 
     each(nodes, (node) => {
-      let key = node.getAttribute('data-key')
+      const key = node.getAttribute('data-key')
       if (!cache[key]) {
         return
       }
-      let { meta, state } = cache[key]
+      const { meta, state } = cache[key]
       onNode(state, meta, node)
     })
 

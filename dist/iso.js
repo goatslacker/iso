@@ -4,7 +4,7 @@ var _prototypeProperties = function (child, staticProps, instanceProps) { if (st
 
 var _classCallCheck = function (instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } };
 
-var escapeTextForBrowser = require("react/lib/escapeTextForBrowser");
+var escapeTextForBrowser = require("escape-html");
 
 var each = function (x, f) {
   return Array.prototype.forEach.call(x, f);
@@ -26,6 +26,7 @@ var Iso = (function () {
       value: function render(html) {
         var state = arguments[1] === undefined ? {} : arguments[1];
         var meta = arguments[2] === undefined ? {} : arguments[2];
+
         return new Iso().add(html, state, meta).render();
       },
       writable: true,
@@ -56,6 +57,7 @@ var Iso = (function () {
           var _cache$key = cache[key];
           var meta = _cache$key.meta;
           var state = _cache$key.state;
+
           onNode(state, meta, node);
         });
 
@@ -79,7 +81,9 @@ var Iso = (function () {
     add: {
       value: function add(html) {
         var _state = arguments[1] === undefined ? {} : arguments[1];
+
         var _meta = arguments[2] === undefined ? {} : arguments[2];
+
         var state = escapeTextForBrowser(JSON.stringify(_state));
         var meta = escapeTextForBrowser(JSON.stringify(_meta));
         this.html.push(html);
@@ -98,6 +102,7 @@ var Iso = (function () {
         var data = this.data.reduce(function (nodes, data, i) {
           var state = data.state;
           var meta = data.meta;
+
           return nodes + ("<div class=\"___iso-state___\" data-key=\"" + i + "\" data-meta=\"" + meta + "\" data-state=\"" + state + "\"></div>");
         }, "");
 
