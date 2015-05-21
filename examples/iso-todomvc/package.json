@@ -17,6 +17,7 @@
     "reactify": "^0.17.1"
   },
   "scripts": {
+    "install": "cd ../.. ;npm install",
     "build": "browserify -t [reactify --es6] js/client.js > js/bundle.js"
   },
   "author": "Josh Perez <josh@goatslacker.com>"
