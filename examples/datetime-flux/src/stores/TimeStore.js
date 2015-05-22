@@ -1,5 +1,5 @@
-var alt = require('../alt')
-var TimeActions = require('../actions/TimeActions')
+let alt = require('../alt')
+let TimeActions = require('../actions/TimeActions')
 
 class TimeStore {
   constructor() {

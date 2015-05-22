@@ -1,14 +1,14 @@
-var express = require('express')
+let express = require('express')
 
-var React = require('react')
-var AltIsomorphicElement = require('./src/components/AltIsomorphicElement')
+let React = require('react')
+let AltIsoElement = require('./src/components/AltIsoElement')
 
-var Iso = require('../../')
-var app = express()
+let Iso = require('../../')
+let app = express()
 
 // This is express boilerplate to make our bundled JS available as well
 // as our template
-var path = require('path')
+let path = require('path')
 app.set('view engine', 'jade')
 app.set('views', path.join(__dirname, 'templates'))
 app.use('/js', express.static(path.join(__dirname, 'js')))
@@ -24,20 +24,19 @@ function getTimeFromServer(cb) {
 
 
 // Our only simple route, we retrieve the time from our asynchronous system
-// seed the stores with data
-// and render the html using iso and jade.
+// seed the stores with data, and render the html using iso and jade.
 app.get('/', function (req, res) {
   getTimeFromServer(function (time) {
-    var rand = Math.random()
+    let rand = Math.random()
 
-    var data = {
+    let data = {
       TimeStore: {
         time: time,
         asyncValue: rand
       }
     }
 
-    var node = React.createElement(AltIsomorphicElement, {
+    let node = React.createElement(AltIsoElement, {
       altStores: data
     })
 
