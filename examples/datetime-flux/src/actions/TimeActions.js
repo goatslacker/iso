@@ -1,6 +1,7 @@
-var alt = require('../alt')
+let alt = require('../alt')
 
 class TimeActions {
+  
   constructor() {
     this.generateActions('updateTime', 'setAsync')
   }

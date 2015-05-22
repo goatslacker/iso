@@ -1,9 +1,9 @@
 let React = require('react')
-
 let TimeActions = require('../actions/TimeActions')
 let TimeStore = require('../stores/TimeStore')
 
-class MyReactComponent extends React.Component {
+class DateTimeComponent extends React.Component {
+  
   constructor() {
     this.state = TimeStore.getState()
   }
@@ -30,4 +30,4 @@ class MyReactComponent extends React.Component {
   }
 }
 
-module.exports = MyReactComponent
+module.exports = DateTimeComponent
