@@ -42,7 +42,7 @@ app.get('/', function (req, res) {
     })
 
     res.render('layout', {
-      html: Iso.render(React.renderToString(node), { altStores: data }, { react: true })
+      html: Iso.render({}, React.renderToString(node), { altStores: data }, { react: true })
     })
   })
 })
