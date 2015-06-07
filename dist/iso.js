@@ -1,6 +1,6 @@
 "use strict";
 
-var _prototypeProperties = function (child, staticProps, instanceProps) { if (staticProps) Object.defineProperties(child, staticProps); if (instanceProps) Object.defineProperties(child.prototype, instanceProps); };
+var _createClass = (function () { function defineProperties(target, props) { for (var key in props) { var prop = props[key]; prop.configurable = true; if (prop.value) prop.writable = true; } Object.defineProperties(target, props); } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
 
 var _classCallCheck = function (instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } };
 
@@ -14,23 +14,58 @@ var parse = function (node, x) {
 };
 
 var Iso = (function () {
-  function Iso() {
+  function Iso(config) {
     _classCallCheck(this, Iso);
 
+    this.markupClassName = config.markupClassName || "___iso-html___";
+    this.markupElement = config.markupElement || "div";
+    this.dataClassName = config.dataClassName || "___iso-state___";
+    this.dataElement = config.dataElement || "div";
     this.html = [];
     this.data = [];
   }
 
-  _prototypeProperties(Iso, {
-    render: {
-      value: function render(html) {
-        var state = arguments[1] === undefined ? {} : arguments[1];
-        var meta = arguments[2] === undefined ? {} : arguments[2];
+  _createClass(Iso, {
+    add: {
+      value: function add(html) {
+        var _state = arguments[1] === undefined ? {} : arguments[1];
 
-        return new Iso().add(html, state, meta).render();
-      },
-      writable: true,
-      configurable: true
+        var _meta = arguments[2] === undefined ? {} : arguments[2];
+
+        var state = escapeTextForBrowser(JSON.stringify(_state));
+        var meta = escapeTextForBrowser(JSON.stringify(_meta));
+        this.html.push(html);
+        this.data.push({ state: state, meta: meta });
+        return this;
+      }
+    },
+    render: {
+      value: function render() {
+        var _this = this;
+
+        var markup = this.html.reduce(function (markup, html, i) {
+          return markup + ("<" + _this.markupElement + " class=\"" + _this.markupClassName + "\" data-key=\"" + i + "\">" + html + "</" + _this.markupElement + ">");
+        }, "");
+
+        var data = this.data.reduce(function (nodes, data, i) {
+          var state = data.state;
+          var meta = data.meta;
+
+          return nodes + ("<" + _this.dataElement + " class=\"" + _this.dataClassName + "\" data-key=\"" + i + "\" data-meta=\"" + meta + "\" data-state=\"" + state + "\"></" + _this.dataElement + ">");
+        }, "");
+
+        return "\n" + markup + "\n" + data + "\n";
+      }
+    }
+  }, {
+    render: {
+      value: function render(_x, html) {
+        var config = arguments[0] === undefined ? { markupClassName: "___iso-html___", markupElement: "div", dataClassName: "___iso-state___", dataElement: "div" } : arguments[0];
+        var state = arguments[2] === undefined ? {} : arguments[2];
+        var meta = arguments[3] === undefined ? {} : arguments[3];
+
+        return new Iso(config).add(html, state, meta).render();
+      }
     },
     bootstrap: {
       value: function bootstrap(onNode) {
@@ -38,8 +73,8 @@ var Iso = (function () {
           return;
         }
 
-        var nodes = document.querySelectorAll(".___iso-html___");
-        var state = document.querySelectorAll(".___iso-state___");
+        var nodes = document.querySelectorAll("." + this.markupClassName);
+        var state = document.querySelectorAll("." + this.dataClassName);
 
         var cache = {};
 
@@ -62,9 +97,7 @@ var Iso = (function () {
         });
 
         cache = null;
-      },
-      writable: true,
-      configurable: true
+      }
     },
     on: {
       value: function on(metaKey, metaValue, onNode) {
@@ -73,43 +106,7 @@ var Iso = (function () {
             onNode(state, meta, node);
           }
         });
-      },
-      writable: true,
-      configurable: true
-    }
-  }, {
-    add: {
-      value: function add(html) {
-        var _state = arguments[1] === undefined ? {} : arguments[1];
-
-        var _meta = arguments[2] === undefined ? {} : arguments[2];
-
-        var state = escapeTextForBrowser(JSON.stringify(_state));
-        var meta = escapeTextForBrowser(JSON.stringify(_meta));
-        this.html.push(html);
-        this.data.push({ state: state, meta: meta });
-        return this;
-      },
-      writable: true,
-      configurable: true
-    },
-    render: {
-      value: function render() {
-        var markup = this.html.reduce(function (markup, html, i) {
-          return markup + ("<div class=\"___iso-html___\" data-key=\"" + i + "\">" + html + "</div>");
-        }, "");
-
-        var data = this.data.reduce(function (nodes, data, i) {
-          var state = data.state;
-          var meta = data.meta;
-
-          return nodes + ("<div class=\"___iso-state___\" data-key=\"" + i + "\" data-meta=\"" + meta + "\" data-state=\"" + state + "\"></div>");
-        }, "");
-
-        return "\n" + markup + "\n" + data + "\n";
-      },
-      writable: true,
-      configurable: true
+      }
     }
   });
 
