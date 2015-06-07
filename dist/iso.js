@@ -69,12 +69,15 @@ var Iso = (function () {
     },
     bootstrap: {
       value: function bootstrap(onNode) {
+        var markupClassName = arguments[1] === undefined ? "___iso-html___" : arguments[1];
+        var dataClassName = arguments[2] === undefined ? "___iso-state___" : arguments[2];
+
         if (!onNode) {
           return;
         }
 
-        var nodes = document.querySelectorAll("." + this.markupClassName);
-        var state = document.querySelectorAll("." + this.dataClassName);
+        var nodes = document.querySelectorAll("." + markupClassName);
+        var state = document.querySelectorAll("." + dataClassName);
 
         var cache = {};
 

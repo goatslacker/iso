@@ -43,13 +43,14 @@ ${data}
     return new Iso(config).add(html, state, meta).render()
   }
 
-  static bootstrap(onNode) {
+  static bootstrap(onNode, markupClassName='___iso-html___', dataClassName='___iso-state___') {
+
     if (!onNode) {
       return
     }
 
-    const nodes = document.querySelectorAll(`.${this.markupClassName}`)
-    const state = document.querySelectorAll(`.${this.dataClassName}`)
+    const nodes = document.querySelectorAll(`.${markupClassName}`)
+    const state = document.querySelectorAll(`.${dataClassName}`)
 
     let cache = {}
 
