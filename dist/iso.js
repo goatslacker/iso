@@ -59,10 +59,10 @@ var Iso = (function () {
     }
   }, {
     render: {
-      value: function render(_x, html) {
-        var config = arguments[0] === undefined ? { markupClassName: "___iso-html___", markupElement: "div", dataClassName: "___iso-state___", dataElement: "div" } : arguments[0];
-        var state = arguments[2] === undefined ? {} : arguments[2];
-        var meta = arguments[3] === undefined ? {} : arguments[3];
+      value: function render(html) {
+        var state = arguments[1] === undefined ? {} : arguments[1];
+        var meta = arguments[2] === undefined ? {} : arguments[2];
+        var config = arguments[3] === undefined ? { markupClassName: "___iso-html___", markupElement: "div", dataClassName: "___iso-state___", dataElement: "div" } : arguments[3];
 
         return new Iso(config).add(html, state, meta).render();
       }

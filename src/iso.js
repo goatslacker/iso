@@ -39,11 +39,11 @@ ${data}
     )
   }
 
-  static render(config = {markupClassName: '___iso-html___', markupElement: 'div', dataClassName: '___iso-state___', dataElement: 'div'}, html, state = {}, meta = {}) {
+  static render(html, state = {}, meta = {}, config = { markupClassName: '___iso-html___', markupElement: 'div', dataClassName: '___iso-state___', dataElement: 'div'}) {
     return new Iso(config).add(html, state, meta).render()
   }
 
-  static bootstrap(onNode, markupClassName='___iso-html___', dataClassName='___iso-state___') {
+  static bootstrap(onNode, markupClassName = '___iso-html___', dataClassName = '___iso-state___') {
 
     if (!onNode) {
       return
