@@ -25,7 +25,7 @@ app.get('/', function (req, res) {
 
     var markup = React.renderToStaticMarkup(React.createElement(TodoApp))
     res.render('index', {
-      html: Iso.render({}, markup, data)
+      html: Iso.render(markup, data)
     })
   })
 })
