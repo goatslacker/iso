@@ -2,13 +2,20 @@ const escapeTextForBrowser = require('escape-html')
 
 const each = (x, f) => Array.prototype.forEach.call(x, f)
 const parse = (node, x) => JSON.parse(node.getAttribute(x))
+const setDefaults = (config) => {
+  config.markupClassName = config.markupClassName || '___iso-html___'
+  config.markupElement = config.markupElement || 'div'
+  config.dataClassName = config.dataClassName || '___iso-state___'
+  config.dataElement = config.dataElement || 'div'
+}
 
 export default class Iso {
   constructor(config) {
-    this.markupClassName = config.markupClassName || '___iso-html___'
-    this.markupElement = config.markupElement || 'div'
-    this.dataClassName = config.dataClassName || '___iso-state___'
-    this.dataElement = config.dataElement || 'div'
+    setDefaults(config)
+    this.markupClassName = config.markupClassName
+    this.markupElement = config.markupElement
+    this.dataClassName = config.dataClassName
+    this.dataElement = config.dataElement
     this.html = []
     this.data = []
   }

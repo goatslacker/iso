@@ -12,15 +12,22 @@ var each = function (x, f) {
 var parse = function (node, x) {
   return JSON.parse(node.getAttribute(x));
 };
+var setDefaults = function (config) {
+  config.markupClassName = config.markupClassName || "___iso-html___";
+  config.markupElement = config.markupElement || "div";
+  config.dataClassName = config.dataClassName || "___iso-state___";
+  config.dataElement = config.dataElement || "div";
+};
 
 var Iso = (function () {
   function Iso(config) {
     _classCallCheck(this, Iso);
 
-    this.markupClassName = config.markupClassName || "___iso-html___";
-    this.markupElement = config.markupElement || "div";
-    this.dataClassName = config.dataClassName || "___iso-state___";
-    this.dataElement = config.dataElement || "div";
+    setDefaults(config);
+    this.markupClassName = config.markupClassName;
+    this.markupElement = config.markupElement;
+    this.dataClassName = config.dataClassName;
+    this.dataElement = config.dataElement;
     this.html = [];
     this.data = [];
   }
