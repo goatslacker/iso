@@ -1,12 +1,18 @@
 const escapeTextForBrowser = require('escape-html')
 
+const defaultConfiguration = {
+  markupClassName: '___iso-html___',
+  markupElement: 'div',
+  dataClassName: '___iso-state___',
+  dataElement: 'div'
+}
 const each = (x, f) => Array.prototype.forEach.call(x, f)
 const parse = (node, x) => JSON.parse(node.getAttribute(x))
 const setDefaults = (config) => {
-  config.markupClassName = config.markupClassName || '___iso-html___'
-  config.markupElement = config.markupElement || 'div'
-  config.dataClassName = config.dataClassName || '___iso-state___'
-  config.dataElement = config.dataElement || 'div'
+  config.markupClassName = config.markupClassName || defaultConfiguration.markupClassName
+  config.markupElement = config.markupElement || defaultConfiguration.markupElement
+  config.dataClassName = config.dataClassName || defaultConfiguration.dataClassName
+  config.dataElement = config.dataElement || defaultConfiguration.dataElement
 }
 
 export default class Iso {
@@ -46,18 +52,18 @@ ${data}
     )
   }
 
-  static render(html, state = {}, meta = {}, config = { markupClassName: '___iso-html___', markupElement: 'div', dataClassName: '___iso-state___', dataElement: 'div'}) {
+  static render(html, state = {}, meta = {}, config = defaultConfiguration) {
     return new Iso(config).add(html, state, meta).render()
   }
 
-  static bootstrap(onNode, markupClassName = '___iso-html___', dataClassName = '___iso-state___') {
-
+  static bootstrap(onNode, config = defaultConfiguration) {
+    setDefaults(config)
     if (!onNode) {
       return
     }
 
-    const nodes = document.querySelectorAll(`.${markupClassName}`)
-    const state = document.querySelectorAll(`.${dataClassName}`)
+    const nodes = document.querySelectorAll(`.${config.markupClassName}`)
+    const state = document.querySelectorAll(`.${config.dataClassName}`)
 
     let cache = {}
 

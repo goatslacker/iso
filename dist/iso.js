@@ -10,6 +10,12 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
 var escapeTextForBrowser = require('escape-html');
 
+var defaultConfiguration = {
+  markupClassName: '___iso-html___',
+  markupElement: 'div',
+  dataClassName: '___iso-state___',
+  dataElement: 'div'
+};
 var each = function each(x, f) {
   return Array.prototype.forEach.call(x, f);
 };
@@ -17,10 +23,10 @@ var parse = function parse(node, x) {
   return JSON.parse(node.getAttribute(x));
 };
 var setDefaults = function setDefaults(config) {
-  config.markupClassName = config.markupClassName || '___iso-html___';
-  config.markupElement = config.markupElement || 'div';
-  config.dataClassName = config.dataClassName || '___iso-state___';
-  config.dataElement = config.dataElement || 'div';
+  config.markupClassName = config.markupClassName || defaultConfiguration.markupClassName;
+  config.markupElement = config.markupElement || defaultConfiguration.markupElement;
+  config.dataClassName = config.dataClassName || defaultConfiguration.dataClassName;
+  config.dataElement = config.dataElement || defaultConfiguration.dataElement;
 };
 
 var Iso = (function () {
@@ -72,22 +78,22 @@ var Iso = (function () {
     value: function render(html) {
       var state = arguments[1] === undefined ? {} : arguments[1];
       var meta = arguments[2] === undefined ? {} : arguments[2];
-      var config = arguments[3] === undefined ? { markupClassName: '___iso-html___', markupElement: 'div', dataClassName: '___iso-state___', dataElement: 'div' } : arguments[3];
+      var config = arguments[3] === undefined ? defaultConfiguration : arguments[3];
 
       return new Iso(config).add(html, state, meta).render();
     }
   }, {
     key: 'bootstrap',
     value: function bootstrap(onNode) {
-      var markupClassName = arguments[1] === undefined ? '___iso-html___' : arguments[1];
-      var dataClassName = arguments[2] === undefined ? '___iso-state___' : arguments[2];
+      var config = arguments[1] === undefined ? defaultConfiguration : arguments[1];
 
+      setDefaults(config);
       if (!onNode) {
         return;
       }
 
-      var nodes = document.querySelectorAll('.' + markupClassName);
-      var state = document.querySelectorAll('.' + dataClassName);
+      var nodes = document.querySelectorAll('.' + config.markupClassName);
+      var state = document.querySelectorAll('.' + config.dataClassName);
 
       var cache = {};
 
