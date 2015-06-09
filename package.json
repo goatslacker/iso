@@ -9,7 +9,7 @@
     "build": "babel ./src/iso.js > dist/iso.js; uglifyjs dist/iso.js -m > dist/iso.min.js"
   },
   "devDependencies": {
-    "babel": "^4.0.1",
+    "babel": "^5.5.5",
     "uglify-js": "^2.4.16"
   },
   "repository": {
