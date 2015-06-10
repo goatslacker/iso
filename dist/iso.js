@@ -120,11 +120,14 @@ var Iso = (function () {
   }, {
     key: 'on',
     value: function on(metaKey, metaValue, onNode) {
+      var config = arguments[3] === undefined ? defaultConfiguration : arguments[3];
+
+      setDefaults(config);
       Iso.bootstrap(function (state, meta, node) {
         if (meta[metaKey] && meta[metaKey] === metaValue) {
           onNode(state, meta, node);
         }
-      });
+      }, config);
     }
   }]);
 

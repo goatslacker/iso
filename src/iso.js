@@ -85,11 +85,12 @@ ${data}
     cache = null
   }
 
-  static on(metaKey, metaValue, onNode) {
+  static on(metaKey, metaValue, onNode, config = defaultConfiguration) {
+    setDefaults(config)
     Iso.bootstrap((state, meta, node) => {
       if (meta[metaKey] && meta[metaKey] === metaValue) {
         onNode(state, meta, node)
       }
-    })
+    }, config)
   }
 }
