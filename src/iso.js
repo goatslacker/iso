@@ -16,7 +16,7 @@ const setDefaults = (config) => {
 }
 
 export default class Iso {
-  constructor(config) {
+  constructor(config = defaultConfiguration) {
     setDefaults(config)
     this.markupClassName = config.markupClassName
     this.markupElement = config.markupElement
