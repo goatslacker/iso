@@ -30,7 +30,9 @@ var setDefaults = function setDefaults(config) {
 };
 
 var Iso = (function () {
-  function Iso(config) {
+  function Iso() {
+    var config = arguments[0] === undefined ? defaultConfiguration : arguments[0];
+
     _classCallCheck(this, Iso);
 
     setDefaults(config);
