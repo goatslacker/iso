@@ -14,7 +14,8 @@ var defaultConfiguration = {
   markupClassName: '___iso-html___',
   markupElement: 'div',
   dataClassName: '___iso-state___',
-  dataElement: 'div'
+  dataElement: 'div',
+  keyPrefix: ''
 };
 var each = function each(x, f) {
   return Array.prototype.forEach.call(x, f);
@@ -27,11 +28,12 @@ var setDefaults = function setDefaults(config) {
   config.markupElement = config.markupElement || defaultConfiguration.markupElement;
   config.dataClassName = config.dataClassName || defaultConfiguration.dataClassName;
   config.dataElement = config.dataElement || defaultConfiguration.dataElement;
+  config.keyPrefix = config.keyPrefix || defaultConfiguration.keyPrefix;
 };
 
 var Iso = (function () {
   function Iso() {
-    var config = arguments[0] === undefined ? defaultConfiguration : arguments[0];
+    var config = arguments.length <= 0 || arguments[0] === undefined ? defaultConfiguration : arguments[0];
 
     _classCallCheck(this, Iso);
 
@@ -40,6 +42,7 @@ var Iso = (function () {
     this.markupElement = config.markupElement;
     this.dataClassName = config.dataClassName;
     this.dataElement = config.dataElement;
+    this.keyPrefix = config.keyPrefix;
     this.html = [];
     this.data = [];
   }
@@ -47,9 +50,9 @@ var Iso = (function () {
   _createClass(Iso, [{
     key: 'add',
     value: function add(html) {
-      var _state = arguments[1] === undefined ? {} : arguments[1];
+      var _state = arguments.length <= 1 || arguments[1] === undefined ? {} : arguments[1];
 
-      var _meta = arguments[2] === undefined ? {} : arguments[2];
+      var _meta = arguments.length <= 2 || arguments[2] === undefined ? {} : arguments[2];
 
       var state = escapeTextForBrowser(JSON.stringify(_state));
       var meta = escapeTextForBrowser(JSON.stringify(_meta));
@@ -63,14 +66,14 @@ var Iso = (function () {
       var _this = this;
 
       var markup = this.html.reduce(function (markup, html, i) {
-        return markup + ('<' + _this.markupElement + ' class="' + _this.markupClassName + '" data-key="' + i + '">' + html + '</' + _this.markupElement + '>');
+        return markup + ('<' + _this.markupElement + ' class="' + _this.markupClassName + '" data-key="' + _this.keyPrefix + '_' + i + '">' + html + '</' + _this.markupElement + '>');
       }, '');
 
       var data = this.data.reduce(function (nodes, data, i) {
         var state = data.state;
         var meta = data.meta;
 
-        return nodes + ('<' + _this.dataElement + ' class="' + _this.dataClassName + '" data-key="' + i + '" data-meta="' + meta + '" data-state="' + state + '"></' + _this.dataElement + '>');
+        return nodes + ('<' + _this.dataElement + ' class="' + _this.dataClassName + '" data-key="' + _this.keyPrefix + '_' + i + '" data-meta="' + meta + '" data-state="' + state + '"></' + _this.dataElement + '>');
       }, '');
 
       return '\n' + markup + '\n' + data + '\n';
@@ -78,16 +81,16 @@ var Iso = (function () {
   }], [{
     key: 'render',
     value: function render(html) {
-      var state = arguments[1] === undefined ? {} : arguments[1];
-      var meta = arguments[2] === undefined ? {} : arguments[2];
-      var config = arguments[3] === undefined ? defaultConfiguration : arguments[3];
+      var state = arguments.length <= 1 || arguments[1] === undefined ? {} : arguments[1];
+      var meta = arguments.length <= 2 || arguments[2] === undefined ? {} : arguments[2];
+      var config = arguments.length <= 3 || arguments[3] === undefined ? defaultConfiguration : arguments[3];
 
       return new Iso(config).add(html, state, meta).render();
     }
   }, {
     key: 'bootstrap',
     value: function bootstrap(onNode) {
-      var config = arguments[1] === undefined ? defaultConfiguration : arguments[1];
+      var config = arguments.length <= 1 || arguments[1] === undefined ? defaultConfiguration : arguments[1];
 
       setDefaults(config);
       if (!onNode) {
@@ -122,7 +125,7 @@ var Iso = (function () {
   }, {
     key: 'on',
     value: function on(metaKey, metaValue, onNode) {
-      var config = arguments[3] === undefined ? defaultConfiguration : arguments[3];
+      var config = arguments.length <= 3 || arguments[3] === undefined ? defaultConfiguration : arguments[3];
 
       setDefaults(config);
       Iso.bootstrap(function (state, meta, node) {
