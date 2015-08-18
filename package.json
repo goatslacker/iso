@@ -9,14 +9,14 @@
     "build": "babel ./src/iso.js > dist/iso.js; uglifyjs dist/iso.js -m > dist/iso.min.js"
   },
   "devDependencies": {
-    "babel": "^5.5.5",
-    "uglify-js": "^2.4.16"
+    "babel": "5.8.21",
+    "uglify-js": "2.4.24"
   },
   "repository": {
     "type": "git",
     "url": "http://github.com/goatslacker/iso.git"
   },
   "dependencies": {
-    "escape-html": "^1.0.1"
+    "escape-html": "1.0.2"
   }
 }
