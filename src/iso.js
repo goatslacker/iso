@@ -4,7 +4,8 @@ const defaultConfiguration = {
   markupClassName: '___iso-html___',
   markupElement: 'div',
   dataClassName: '___iso-state___',
-  dataElement: 'div'
+  dataElement: 'div',
+  keyPrefix: ''
 }
 const each = (x, f) => Array.prototype.forEach.call(x, f)
 const parse = (node, x) => JSON.parse(node.getAttribute(x))
@@ -13,6 +14,7 @@ const setDefaults = (config) => {
   config.markupElement = config.markupElement || defaultConfiguration.markupElement
   config.dataClassName = config.dataClassName || defaultConfiguration.dataClassName
   config.dataElement = config.dataElement || defaultConfiguration.dataElement
+  config.keyPrefix = config.keyPrefix || defaultConfiguration.keyPrefix
 }
 
 export default class Iso {
@@ -22,6 +24,7 @@ export default class Iso {
     this.markupElement = config.markupElement
     this.dataClassName = config.dataClassName
     this.dataElement = config.dataElement
+    this.keyPrefix = config.keyPrefix
     this.html = []
     this.data = []
   }
@@ -36,12 +39,12 @@ export default class Iso {
 
   render() {
     const markup = this.html.reduce((markup, html, i) => {
-      return markup + `<${this.markupElement} class="${this.markupClassName}" data-key="${i}">${html}</${this.markupElement}>`
+      return markup + `<${this.markupElement} class="${this.markupClassName}" data-key="${this.keyPrefix}_${i}">${html}</${this.markupElement}>`
     }, '')
 
     const data = this.data.reduce((nodes, data, i) => {
       const { state, meta } = data
-      return nodes + `<${this.dataElement} class="${this.dataClassName}" data-key="${i}" data-meta="${meta}" data-state="${state}"></${this.dataElement}>`
+      return nodes + `<${this.dataElement} class="${this.dataClassName}" data-key="${this.keyPrefix}_${i}" data-meta="${meta}" data-state="${state}"></${this.dataElement}>`
     }, '')
 
     return (
