@@ -52,11 +52,12 @@ describe('#iso.render()', () => {
     });
   });
 
-  it("should add ___iso-state___ within the root element", () => {
+  it("should add ___iso-state___ within the root element", (done) => {
     Iso.bootstrap((state, meta, node) => {
       var node = document.querySelector('.___iso-html___');
       var stateNode = node.querySelector('.___iso-state___');
       expect(stateNode).to.be.ok;
+      done();
     });
   });
 

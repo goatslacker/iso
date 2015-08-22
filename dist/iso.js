@@ -84,9 +84,7 @@ var Iso = (function () {
         }
       }, '');
 
-      console.log(markup);
-
-      return '\n      ' + markup + '\n      ';
+      return '' + markup;
     }
   }], [{
     key: 'render',
@@ -107,6 +105,7 @@ var Iso = (function () {
         return;
       }
 
+      var nodes = document.querySelectorAll('.' + config.markupClassName);
       var state = document.querySelectorAll('.' + config.dataClassName);
 
       var cache = {};
@@ -117,31 +116,17 @@ var Iso = (function () {
         cache[node.getAttribute('data-key')] = { meta: meta, state: state };
       });
 
-      if (this.entryHook) {
-        var key = document.getAttribute('data-key');
+      each(nodes, function (node) {
+        var key = node.getAttribute('data-key');
         if (!cache[key]) {
           return;
         }
         var _cache$key = cache[key];
         var meta = _cache$key.meta;
-        var _state2 = _cache$key.state;
+        var state = _cache$key.state;
 
-        onNode(_state2, meta, document);
-      } else {
-        var nodes = document.querySelectorAll('.' + config.markupClassName);
-
-        each(nodes, function (node) {
-          var key = node.getAttribute('data-key');
-          if (!cache[key]) {
-            return;
-          }
-          var _cache$key2 = cache[key];
-          var meta = _cache$key2.meta;
-          var state = _cache$key2.state;
-
-          onNode(state, meta, node);
-        });
-      }
+        onNode(state, meta, node);
+      });
 
       cache = null;
     }

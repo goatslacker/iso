@@ -57,14 +57,8 @@ export default class Iso {
         return markup + `<${this.markupElement} class="${this.markupClassName}" data-key="${this.keyPrefix}_${i}">${html}</${this.markupElement}>`
       }
     }, '')
-
-    console.log(markup);
     
-    return (
-      `
-      ${markup}
-      `
-    )
+    return (`${markup}`)
   }
 
   static render(html, state = {}, meta = {}, config = defaultConfiguration) {
@@ -77,6 +71,7 @@ export default class Iso {
       return
     }
 
+    const nodes = document.querySelectorAll(`.${config.markupClassName}`)
     const state = document.querySelectorAll(`.${config.dataClassName}`)
 
     let cache = {}
@@ -87,25 +82,14 @@ export default class Iso {
       cache[node.getAttribute('data-key')] = { meta, state }
     })
 
-    if (this.entryHook) {
-      const key = document.getAttribute('data-key');
+    each(nodes, (node) => {
+      const key = node.getAttribute('data-key')
       if (!cache[key]) {
         return
       }
       const { meta, state } = cache[key]
-      onNode(state, meta, document);
-    } else {
-      const nodes = document.querySelectorAll(`.${config.markupClassName}`)
-
-      each(nodes, (node) => {
-        const key = node.getAttribute('data-key')
-        if (!cache[key]) {
-          return
-        }
-        const { meta, state } = cache[key]
-        onNode(state, meta, node)
-      })
-    }
+      onNode(state, meta, node)
+    })
 
     cache = null
   }
