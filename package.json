@@ -6,10 +6,22 @@
   "author": "Josh Perez <josh@goatslacker.com>",
   "license": "MIT",
   "scripts": {
+    "test": "mocha -w --compilers js:babel/register",
     "build": "babel ./src/iso.js > dist/iso.js; uglifyjs dist/iso.js -m > dist/iso.min.js"
   },
   "devDependencies": {
     "babel": "5.8.21",
+    "babelify": "^6.2.0",
+    "browserify": "^11.0.1",
+    "chai": "^3.2.0",
+    "jasmine-core": "^2.3.4",
+    "karma": "^0.13.9",
+    "karma-babel-preprocessor": "^5.2.1",
+    "karma-browserify": "^4.3.0",
+    "karma-chai": "^0.1.0",
+    "karma-chrome-launcher": "^0.2.0",
+    "karma-mocha": "^0.2.0",
+    "mocha": "^2.2.5",
     "uglify-js": "2.4.24"
   },
   "repository": {
@@ -17,6 +29,7 @@
     "url": "http://github.com/goatslacker/iso.git"
   },
   "dependencies": {
+    "cheerio": "^0.19.0",
     "escape-html": "1.0.2"
   }
 }

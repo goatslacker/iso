@@ -15,7 +15,8 @@ var defaultConfiguration = {
   markupElement: 'div',
   dataClassName: '___iso-state___',
   dataElement: 'div',
-  keyPrefix: ''
+  keyPrefix: '',
+  entryHook: 'iso-root'
 };
 var each = function each(x, f) {
   return Array.prototype.forEach.call(x, f);
@@ -24,6 +25,7 @@ var parse = function parse(node, x) {
   return JSON.parse(node.getAttribute(x));
 };
 var setDefaults = function setDefaults(config) {
+  config.entryHook = config.entryHook || defaultConfiguration.entryHook;
   config.markupClassName = config.markupClassName || defaultConfiguration.markupClassName;
   config.markupElement = config.markupElement || defaultConfiguration.markupElement;
   config.dataClassName = config.dataClassName || defaultConfiguration.dataClassName;
@@ -43,6 +45,7 @@ var Iso = (function () {
     this.dataClassName = config.dataClassName;
     this.dataElement = config.dataElement;
     this.keyPrefix = config.keyPrefix;
+    this.entryHook = config.entryHook;
     this.html = [];
     this.data = [];
   }
@@ -65,10 +68,6 @@ var Iso = (function () {
     value: function render() {
       var _this = this;
 
-      var markup = this.html.reduce(function (markup, html, i) {
-        return markup + ('<' + _this.markupElement + ' class="' + _this.markupClassName + '" data-key="' + _this.keyPrefix + '_' + i + '">' + html + '</' + _this.markupElement + '>');
-      }, '');
-
       var data = this.data.reduce(function (nodes, data, i) {
         var state = data.state;
         var meta = data.meta;
@@ -76,7 +75,18 @@ var Iso = (function () {
         return nodes + ('<' + _this.dataElement + ' class="' + _this.dataClassName + '" data-key="' + _this.keyPrefix + '_' + i + '" data-meta="' + meta + '" data-state="' + state + '"></' + _this.dataElement + '>');
       }, '');
 
-      return '\n' + markup + '\n' + data + '\n';
+      var markup = this.html.reduce(function (markup, html, i) {
+        if (_this.entryHook) {
+          var isoHtml = html.replace(_this.entryHook, _this.markupClassName).replace('data-key', 'data-key="' + _this.keyPrefix + '_' + i + '"').replace('<!--___iso-state___-->', data);
+          return markup + isoHtml;
+        } else {
+          return markup + ('<' + _this.markupElement + ' class="' + _this.markupClassName + '" data-key="' + _this.keyPrefix + '_' + i + '">' + html + '</' + _this.markupElement + '>');
+        }
+      }, '');
+
+      console.log(markup);
+
+      return '\n      ' + markup + '\n      ';
     }
   }], [{
     key: 'render',
@@ -97,7 +107,6 @@ var Iso = (function () {
         return;
       }
 
-      var nodes = document.querySelectorAll('.' + config.markupClassName);
       var state = document.querySelectorAll('.' + config.dataClassName);
 
       var cache = {};
@@ -108,17 +117,31 @@ var Iso = (function () {
         cache[node.getAttribute('data-key')] = { meta: meta, state: state };
       });
 
-      each(nodes, function (node) {
-        var key = node.getAttribute('data-key');
+      if (this.entryHook) {
+        var key = document.getAttribute('data-key');
         if (!cache[key]) {
           return;
         }
         var _cache$key = cache[key];
         var meta = _cache$key.meta;
-        var state = _cache$key.state;
+        var _state2 = _cache$key.state;
 
-        onNode(state, meta, node);
-      });
+        onNode(_state2, meta, document);
+      } else {
+        var nodes = document.querySelectorAll('.' + config.markupClassName);
+
+        each(nodes, function (node) {
+          var key = node.getAttribute('data-key');
+          if (!cache[key]) {
+            return;
+          }
+          var _cache$key2 = cache[key];
+          var meta = _cache$key2.meta;
+          var state = _cache$key2.state;
+
+          onNode(state, meta, node);
+        });
+      }
 
       cache = null;
     }
