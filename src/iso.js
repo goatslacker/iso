@@ -4,7 +4,7 @@ const defaultConfiguration = {
   markupClassName: '___iso-html___',
   markupElement: 'div',
   dataClassName: '___iso-state___',
-  dataElement: 'div',
+  dataElement: 'script',
   keyPrefix: '',
   entryHook: 'iso-root'
 }
@@ -33,8 +33,8 @@ export default class Iso {
   }
 
   add(html, _state = {}, _meta = {}) {
-    const state = escapeTextForBrowser(JSON.stringify(_state))
-    const meta = escapeTextForBrowser(JSON.stringify(_meta))
+    const state = escapeTextForBrowser(JSON.stringify(_state));
+    const meta = escapeTextForBrowser(JSON.stringify(_meta));
     this.html.push(html)
     this.data.push({ state, meta })
     return this
@@ -44,7 +44,7 @@ export default class Iso {
 
     const data = this.data.reduce((nodes, data, i) => {
       const { state, meta } = data
-      return nodes + `<${this.dataElement} class="${this.dataClassName}" data-key="${this.keyPrefix}_${i}" data-meta="${meta}" data-state="${state}"></${this.dataElement}>`
+      return nodes + `<${this.dataElement} class="${this.dataClassName}" type="application/json" data-key="${this.keyPrefix}_${i}" data-meta="${meta}">${state}</${this.dataElement}>`
     }, '')
 
     const markup = this.html.reduce((markup, html, i) => {
@@ -77,8 +77,8 @@ export default class Iso {
     let cache = {}
 
     each(state, (node) => {
-      const meta = parse(node, 'data-meta')
-      const state = parse(node, 'data-state')
+      const meta = parse(node, 'data-meta'); // meta
+      const state = JSON.parse(node.innerHTML); // state
       cache[node.getAttribute('data-key')] = { meta, state }
     })
 
