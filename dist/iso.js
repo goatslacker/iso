@@ -14,7 +14,7 @@ var defaultConfiguration = {
   markupClassName: '___iso-html___',
   markupElement: 'div',
   dataClassName: '___iso-state___',
-  dataElement: 'div',
+  dataElement: 'script',
   keyPrefix: '',
   entryHook: 'iso-root'
 };
@@ -72,7 +72,7 @@ var Iso = (function () {
         var state = data.state;
         var meta = data.meta;
 
-        return nodes + ('<' + _this.dataElement + ' class="' + _this.dataClassName + '" data-key="' + _this.keyPrefix + '_' + i + '" data-meta="' + meta + '" data-state="' + state + '"></' + _this.dataElement + '>');
+        return nodes + ('<' + _this.dataElement + ' class="' + _this.dataClassName + '" type="application/json" data-key="' + _this.keyPrefix + '_' + i + '" data-meta="' + meta + '">' + state + '</' + _this.dataElement + '>');
       }, '');
 
       var markup = this.html.reduce(function (markup, html, i) {
@@ -111,8 +111,8 @@ var Iso = (function () {
       var cache = {};
 
       each(state, function (node) {
-        var meta = parse(node, 'data-meta');
-        var state = parse(node, 'data-state');
+        var meta = parse(node, 'data-meta'); // meta
+        var state = JSON.parse(node.innerHTML); // state
         cache[node.getAttribute('data-key')] = { meta: meta, state: state };
       });
 
