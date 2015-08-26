@@ -33,7 +33,7 @@ export default class Iso {
   }
 
   add(html, _state = {}, _meta = {}) {
-    const state = escapeTextForBrowser(JSON.stringify(_state));
+    const state = JSON.stringify(_state);
     const meta = escapeTextForBrowser(JSON.stringify(_meta));
     this.html.push(html)
     this.data.push({ state, meta })
@@ -41,23 +41,23 @@ export default class Iso {
   }
 
   render() {
-
     const data = this.data.reduce((nodes, data, i) => {
       const { state, meta } = data
       return nodes + `<${this.dataElement} class="${this.dataClassName}" type="application/json" data-key="${this.keyPrefix}_${i}" data-meta="${meta}">${state}</${this.dataElement}>`
     }, '')
-
     const markup = this.html.reduce((markup, html, i) => {
       if (this.entryHook) {
         var isoHtml = html.replace(this.entryHook, this.markupClassName)
-          .replace('data-key', `data-key="${this.keyPrefix}_${i}"`)
-          .replace('<!--___iso-state___-->', data);
+          .replace('data-key', `data-key="${this.keyPrefix}_${i}"`);
+        var entryIndex = isoHtml.indexOf('</html>');
+        var snipped = isoHtml.split('');
+        snipped.splice(entryIndex, 0, data);
+        isoHtml = snipped.join('');
         return markup + isoHtml;
       } else {
         return markup + `<${this.markupElement} class="${this.markupClassName}" data-key="${this.keyPrefix}_${i}">${html}</${this.markupElement}>`
       }
     }, '')
-    
     return (`${markup}`)
   }
 

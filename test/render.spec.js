@@ -9,7 +9,7 @@ describe('#iso.render()', () => {
 
   beforeEach(() => {
     iso = new Iso();
-    iso.add('<html id="root-markup" class="iso-root" data-key><span><!--___iso-state___--></span></html>', {name: 'isomorphic'});
+    iso.add('<html id="root-markup" class="iso-root" data-key></html>', {name: 'isomorphic'});
     html = iso.render();
     document.write(html);
   });
@@ -57,6 +57,15 @@ describe('#iso.render()', () => {
       var node = document.querySelector('.___iso-html___');
       var stateNode = node.querySelector('.___iso-state___');
       expect(stateNode).to.be.ok;
+      done();
+    });
+  });
+
+  it("should contain json within script tag", (done) => {
+    Iso.bootstrap((state, meta, node) => {
+      var el = document.querySelector('.___iso-state___');
+      expect(el.tagName).to.equal('SCRIPT');
+      expect(JSON.parse(el.innerHTML).name).to.equal('isomorphic');
       done();
     });
   });

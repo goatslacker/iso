@@ -57,7 +57,7 @@ var Iso = (function () {
 
       var _meta = arguments.length <= 2 || arguments[2] === undefined ? {} : arguments[2];
 
-      var state = escapeTextForBrowser(JSON.stringify(_state));
+      var state = JSON.stringify(_state);
       var meta = escapeTextForBrowser(JSON.stringify(_meta));
       this.html.push(html);
       this.data.push({ state: state, meta: meta });
@@ -74,16 +74,18 @@ var Iso = (function () {
 
         return nodes + ('<' + _this.dataElement + ' class="' + _this.dataClassName + '" type="application/json" data-key="' + _this.keyPrefix + '_' + i + '" data-meta="' + meta + '">' + state + '</' + _this.dataElement + '>');
       }, '');
-
       var markup = this.html.reduce(function (markup, html, i) {
         if (_this.entryHook) {
-          var isoHtml = html.replace(_this.entryHook, _this.markupClassName).replace('data-key', 'data-key="' + _this.keyPrefix + '_' + i + '"').replace('<!--___iso-state___-->', data);
+          var isoHtml = html.replace(_this.entryHook, _this.markupClassName).replace('data-key', 'data-key="' + _this.keyPrefix + '_' + i + '"');
+          var entryIndex = isoHtml.indexOf('</html>');
+          var snipped = isoHtml.split('');
+          snipped.splice(entryIndex, 0, data);
+          isoHtml = snipped.join('');
           return markup + isoHtml;
         } else {
           return markup + ('<' + _this.markupElement + ' class="' + _this.markupClassName + '" data-key="' + _this.keyPrefix + '_' + i + '">' + html + '</' + _this.markupElement + '>');
         }
       }, '');
-
       return '' + markup;
     }
   }], [{

@@ -13,7 +13,7 @@ var App = React.createClass({
           <br />
           <RouteHandler {...this.props} />
         </body>
-        <span dangerouslySetInnerHTML={{__html: '<!--___iso-state___-->'}} />
+        <script src="/js/bundle.js"></script>
       </html>
     )
   }
