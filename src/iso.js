@@ -1,3 +1,5 @@
+import cheerio from 'cheerio';
+
 const escapeTextForBrowser = require('escape-html')
 
 const defaultConfiguration = {
@@ -5,13 +7,11 @@ const defaultConfiguration = {
   markupElement: 'div',
   dataClassName: '___iso-state___',
   dataElement: 'script',
-  keyPrefix: '',
-  entryHook: 'iso-root'
+  keyPrefix: ''
 }
 const each = (x, f) => Array.prototype.forEach.call(x, f)
 const parse = (node, x) => JSON.parse(node.getAttribute(x))
 const setDefaults = (config) => {
-  config.entryHook = config.entryHook || defaultConfiguration.entryHook;
   config.markupClassName = config.markupClassName || defaultConfiguration.markupClassName
   config.markupElement = config.markupElement || defaultConfiguration.markupElement
   config.dataClassName = config.dataClassName || defaultConfiguration.dataClassName
@@ -27,38 +27,32 @@ export default class Iso {
     this.dataClassName = config.dataClassName
     this.dataElement = config.dataElement
     this.keyPrefix = config.keyPrefix
-    this.entryHook = config.entryHook;
     this.html = []
     this.data = []
   }
 
   add(html, _state = {}, _meta = {}) {
-    const state = JSON.stringify(_state);
     const meta = escapeTextForBrowser(JSON.stringify(_meta));
     this.html.push(html)
-    this.data.push({ state, meta })
+    this.data.push(_state)
     return this
   }
 
   render() {
-    const data = this.data.reduce((nodes, data, i) => {
-      const { state, meta } = data
-      return nodes + `<${this.dataElement} class="${this.dataClassName}" type="application/json" data-key="${this.keyPrefix}_${i}" data-meta="${meta}">${state}</${this.dataElement}>`
-    }, '')
+    const data = `<${this.dataElement} class="${this.dataClassName}" type="application/json">${JSON.stringify(this.data)}</${this.dataElement}>`;
+
     const markup = this.html.reduce((markup, html, i) => {
-      if (this.entryHook) {
-        var isoHtml = html.replace(this.entryHook, this.markupClassName)
-          .replace('data-key', `data-key="${this.keyPrefix}_${i}"`);
-        var entryIndex = isoHtml.indexOf('</html>');
-        var snipped = isoHtml.split('');
-        snipped.splice(entryIndex, 0, data);
-        isoHtml = snipped.join('');
-        return markup + isoHtml;
-      } else {
-        return markup + `<${this.markupElement} class="${this.markupClassName}" data-key="${this.keyPrefix}_${i}">${html}</${this.markupElement}>`
-      }
+      let $ = cheerio.load(html);
+      var isoHtml = $.html();
+      return markup + isoHtml;
     }, '')
-    return (`${markup}`)
+    
+    let $ = cheerio.load(markup);
+    
+    $('html').find('body').append(data);
+    const output = $.html();
+
+    return (`${output}`)
   }
 
   static render(html, state = {}, meta = {}, config = defaultConfiguration) {
@@ -71,27 +65,13 @@ export default class Iso {
       return
     }
 
-    const nodes = document.querySelectorAll(`.${config.markupClassName}`)
     const state = document.querySelectorAll(`.${config.dataClassName}`)
 
-    let cache = {}
+    let cache = JSON.parse(state[0].innerHTML);
+      
+    onNode(cache, document.documentElement);
 
-    each(state, (node) => {
-      const meta = parse(node, 'data-meta'); // meta
-      const state = JSON.parse(node.innerHTML); // state
-      cache[node.getAttribute('data-key')] = { meta, state }
-    })
-
-    each(nodes, (node) => {
-      const key = node.getAttribute('data-key')
-      if (!cache[key]) {
-        return
-      }
-      const { meta, state } = cache[key]
-      onNode(state, meta, node)
-    })
-
-    cache = null
+    cache = null;
   }
 
   static on(metaKey, metaValue, onNode, config = defaultConfiguration) {

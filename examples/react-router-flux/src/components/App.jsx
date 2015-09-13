@@ -4,7 +4,7 @@ var { RouteHandler, Link } = require('react-router')
 var App = React.createClass({
   render() {
     return (
-      <html className="iso-root" data-key>
+      <html className="___iso-html___">
         <head></head>
         <body>
           <Link to='hello'>Say hi</Link>

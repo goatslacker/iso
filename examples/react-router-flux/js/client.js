@@ -15,8 +15,6 @@ document.addEventListener('DOMContentLoaded', function () {
 
   Iso.bootstrap(function (state, _, container) {
     alt.bootstrap(state)
-
-    console.log(state);
     Router.run(routes, Router.HistoryLocation, function (Handler) {
       var node = React.createElement(Handler)
       React.render(node, container)
