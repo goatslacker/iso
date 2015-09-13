@@ -55,15 +55,13 @@ app.get('/time', function (req, res, next) {
 app.use(function (req, res) {
   alt.bootstrap(JSON.stringify(res.locals.data || {}))
 
-  var iso = new Iso()
+  var iso = new Iso();
 
   Router.run(routes, req.url, function (Handler) {
     var content = React.renderToString(React.createElement(Handler))
     iso.add(content, alt.flush())
-
-    res.render('layout', {
-      html: iso.render()
-    })
+    
+    res.send('<!doctype html>' + iso.render());
   })
 })
 

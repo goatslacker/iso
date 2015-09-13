@@ -6,7 +6,13 @@ Object.defineProperty(exports, '__esModule', {
 
 var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
 
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
+
+var _cheerio = require('cheerio');
+
+var _cheerio2 = _interopRequireDefault(_cheerio);
 
 var escapeTextForBrowser = require('escape-html');
 
@@ -14,7 +20,7 @@ var defaultConfiguration = {
   markupClassName: '___iso-html___',
   markupElement: 'div',
   dataClassName: '___iso-state___',
-  dataElement: 'div',
+  dataElement: 'script',
   keyPrefix: ''
 };
 var each = function each(x, f) {
@@ -54,29 +60,28 @@ var Iso = (function () {
 
       var _meta = arguments.length <= 2 || arguments[2] === undefined ? {} : arguments[2];
 
-      var state = escapeTextForBrowser(JSON.stringify(_state));
       var meta = escapeTextForBrowser(JSON.stringify(_meta));
       this.html.push(html);
-      this.data.push({ state: state, meta: meta });
+      this.data.push(JSON.parse(_state));
       return this;
     }
   }, {
     key: 'render',
     value: function render() {
-      var _this = this;
+      var data = '<' + this.dataElement + ' class="' + this.dataClassName + '" type="application/json">' + JSON.stringify(this.data) + '</' + this.dataElement + '>';
 
       var markup = this.html.reduce(function (markup, html, i) {
-        return markup + ('<' + _this.markupElement + ' class="' + _this.markupClassName + '" data-key="' + _this.keyPrefix + '_' + i + '">' + html + '</' + _this.markupElement + '>');
+        var $ = _cheerio2['default'].load(html);
+        var isoHtml = $.html();
+        return markup + isoHtml;
       }, '');
 
-      var data = this.data.reduce(function (nodes, data, i) {
-        var state = data.state;
-        var meta = data.meta;
+      var $ = _cheerio2['default'].load(markup);
 
-        return nodes + ('<' + _this.dataElement + ' class="' + _this.dataClassName + '" data-key="' + _this.keyPrefix + '_' + i + '" data-meta="' + meta + '" data-state="' + state + '"></' + _this.dataElement + '>');
-      }, '');
+      $('html').find('body').append(data);
+      var output = $.html();
 
-      return '\n' + markup + '\n' + data + '\n';
+      return '' + output;
     }
   }], [{
     key: 'render',
@@ -97,28 +102,11 @@ var Iso = (function () {
         return;
       }
 
-      var nodes = document.querySelectorAll('.' + config.markupClassName);
       var state = document.querySelectorAll('.' + config.dataClassName);
 
-      var cache = {};
+      var cache = JSON.parse(state[0].innerHTML);
 
-      each(state, function (node) {
-        var meta = parse(node, 'data-meta');
-        var state = parse(node, 'data-state');
-        cache[node.getAttribute('data-key')] = { meta: meta, state: state };
-      });
-
-      each(nodes, function (node) {
-        var key = node.getAttribute('data-key');
-        if (!cache[key]) {
-          return;
-        }
-        var _cache$key = cache[key];
-        var meta = _cache$key.meta;
-        var state = _cache$key.state;
-
-        onNode(state, meta, node);
-      });
+      onNode(cache, document.documentElement);
 
       cache = null;
     }

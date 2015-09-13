@@ -11,11 +11,14 @@ var alt = require('../src/alt')
 // Router.HistoryLocation
 // the element is created and we just render it into the container
 // and our application is now live
-Iso.bootstrap(function (state, _, container) {
-  alt.bootstrap(state)
+document.addEventListener('DOMContentLoaded', function () {
 
-  Router.run(routes, Router.HistoryLocation, function (Handler) {
-    var node = React.createElement(Handler)
-    React.render(node, container)
+  Iso.bootstrap(function (state, _, container) {
+    alt.bootstrap(state)
+    Router.run(routes, Router.HistoryLocation, function (Handler) {
+      var node = React.createElement(Handler)
+      React.render(node, container)
+    })
   })
-})
+
+});
