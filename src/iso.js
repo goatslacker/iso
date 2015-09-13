@@ -34,7 +34,7 @@ export default class Iso {
   add(html, _state = {}, _meta = {}) {
     const meta = escapeTextForBrowser(JSON.stringify(_meta));
     this.html.push(html)
-    this.data.push(_state)
+    this.data.push(JSON.parse(_state))
     return this
   }
 

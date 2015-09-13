@@ -62,7 +62,7 @@ var Iso = (function () {
 
       var meta = escapeTextForBrowser(JSON.stringify(_meta));
       this.html.push(html);
-      this.data.push(_state);
+      this.data.push(JSON.parse(_state));
       return this;
     }
   }, {
