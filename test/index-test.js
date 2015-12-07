@@ -132,4 +132,19 @@ export default {
       }
     })
   },
+
+  'bad state': (done) => {
+    const markup = `
+      <div data-iso-key="_0"></div>
+      <script type="application/json" data-iso-key="_0">SOME BAD JSON</script>
+    `
+
+    global.document = jsdom(markup)
+
+    Iso.bootstrap((state, node, key) => {
+      assert(Object.keys(state).length === 0, 'empty object returned')
+      delete global.document
+      done()
+    })
+  },
 }

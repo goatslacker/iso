@@ -21,8 +21,12 @@ const defaultSelector = () => {
     if (!cache[key]) cache[key] = {}
 
     if (node.nodeName === 'SCRIPT') {
-      const state = JSON.parse(node.innerHTML)
-      cache[key].state = state
+      try {
+        const state = JSON.parse(node.innerHTML)
+        cache[key].state = state
+      } catch (e) {
+        cache[key].state = {}
+      }
     } else {
       cache[key].node = node
     }
