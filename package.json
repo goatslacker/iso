@@ -6,17 +6,24 @@
   "author": "Josh Perez <josh@goatslacker.com>",
   "license": "MIT",
   "scripts": {
-    "build": "babel ./src/iso.js > dist/iso.js; uglifyjs dist/iso.js -m > dist/iso.min.js"
+    "build": "babel ./src/iso.js > dist/iso.js; uglifyjs dist/iso.js -m > dist/iso.min.js",
+    "lint": "eslint src",
+    "test": "babel-node node_modules/.bin/_mocha -u exports test/*-test.js"
   },
   "devDependencies": {
-    "babel": "5.8.21",
+    "babel-cli": "6.2.0",
+    "babel-preset-airbnb": "1.0.1",
+    "chai": "3.4.1",
+    "cheerio": "0.19.0",
+    "eslint": "1.10.3",
+    "eslint-config-airbnb": "2.0.0",
+    "eslint-plugin-react": "3.11.2",
+    "jsdom": "7.1.1",
+    "mocha": "2.3.4",
     "uglify-js": "2.4.24"
   },
   "repository": {
     "type": "git",
     "url": "http://github.com/goatslacker/iso.git"
-  },
-  "dependencies": {
-    "escape-html": "1.0.2"
   }
 }
