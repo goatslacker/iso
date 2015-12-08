@@ -1,99 +1,81 @@
-const escapeTextForBrowser = require('escape-html')
+const KEY_NAME = 'data-iso-key'
 
-const defaultConfiguration = {
-  markupClassName: '___iso-html___',
-  markupElement: 'div',
-  dataClassName: '___iso-state___',
-  dataElement: 'div',
-  keyPrefix: ''
+const defaultRenderer = {
+  markup(html, key) {
+    if (!html) return ''
+    return `<div ${KEY_NAME}="${key}">${html}</div>`
+  },
+
+  data(state, key) {
+    if (!state) return ''
+    return `<script type="application/json" ${KEY_NAME}="${key}">${state}</script>`
+  },
 }
-const each = (x, f) => Array.prototype.forEach.call(x, f)
-const parse = (node, x) => JSON.parse(node.getAttribute(x))
-const setDefaults = (config) => {
-  config.markupClassName = config.markupClassName || defaultConfiguration.markupClassName
-  config.markupElement = config.markupElement || defaultConfiguration.markupElement
-  config.dataClassName = config.dataClassName || defaultConfiguration.dataClassName
-  config.dataElement = config.dataElement || defaultConfiguration.dataElement
-  config.keyPrefix = config.keyPrefix || defaultConfiguration.keyPrefix
+
+const defaultSelector = () => {
+  const all = document.querySelectorAll(`[${KEY_NAME}]`)
+
+  return Array.prototype.reduce.call(all, (cache, node) => {
+    const key = node.getAttribute(KEY_NAME)
+
+    if (!cache[key]) cache[key] = {}
+
+    if (node.nodeName === 'SCRIPT') {
+      try {
+        const state = JSON.parse(node.innerHTML)
+        cache[key].state = state
+      } catch (e) {
+        cache[key].state = {}
+      }
+    } else {
+      cache[key].node = node
+    }
+
+    return cache
+  }, {})
 }
 
 export default class Iso {
-  constructor(config = defaultConfiguration) {
-    setDefaults(config)
-    this.markupClassName = config.markupClassName
-    this.markupElement = config.markupElement
-    this.dataClassName = config.dataClassName
-    this.dataElement = config.dataElement
-    this.keyPrefix = config.keyPrefix
+  constructor(name = '', renderer = defaultRenderer) {
+    this.name = name
+    this.renderer = renderer
     this.html = []
     this.data = []
   }
 
-  add(html, _state = {}, _meta = {}) {
-    const state = escapeTextForBrowser(JSON.stringify(_state))
-    const meta = escapeTextForBrowser(JSON.stringify(_meta))
+  add(html, _state = {}) {
+    const state = JSON.stringify(_state)
     this.html.push(html)
-    this.data.push({ state, meta })
+    this.data.push(state)
     return this
   }
 
   render() {
-    const markup = this.html.reduce((markup, html, i) => {
-      return markup + `<${this.markupElement} class="${this.markupClassName}" data-key="${this.keyPrefix}_${i}">${html}</${this.markupElement}>`
+    const markup = this.html.reduce((nodes, html, i) => {
+      const key = `${this.name}_${i}`
+      return nodes + this.renderer.markup(html, key, this.name)
     }, '')
 
-    const data = this.data.reduce((nodes, data, i) => {
-      const { state, meta } = data
-      return nodes + `<${this.dataElement} class="${this.dataClassName}" data-key="${this.keyPrefix}_${i}" data-meta="${meta}" data-state="${state}"></${this.dataElement}>`
+    const data = this.data.reduce((nodes, state, i) => {
+      const key = `${this.name}_${i}`
+      return nodes + this.renderer.data(state, key, this.name)
     }, '')
 
-    return (
-`
-${markup}
-${data}
-`
-    )
+    return `${markup}\n${data}`
   }
 
-  static render(html, state = {}, meta = {}, config = defaultConfiguration) {
-    return new Iso(config).add(html, state, meta).render()
+  static render(html, state = {}, name = '', renderer = defaultRenderer) {
+    return new Iso(name, renderer).add(html, state).render()
   }
 
-  static bootstrap(onNode, config = defaultConfiguration) {
-    setDefaults(config)
-    if (!onNode) {
-      return
-    }
+  static bootstrap(onNode, selector = defaultSelector) {
+    if (!onNode) return
 
-    const nodes = document.querySelectorAll(`.${config.markupClassName}`)
-    const state = document.querySelectorAll(`.${config.dataClassName}`)
+    const cache = selector()
 
-    let cache = {}
-
-    each(state, (node) => {
-      const meta = parse(node, 'data-meta')
-      const state = parse(node, 'data-state')
-      cache[node.getAttribute('data-key')] = { meta, state }
+    Object.keys(cache).forEach((key) => {
+      const { state, node } = cache[key]
+      onNode(state, node, key)
     })
-
-    each(nodes, (node) => {
-      const key = node.getAttribute('data-key')
-      if (!cache[key]) {
-        return
-      }
-      const { meta, state } = cache[key]
-      onNode(state, meta, node)
-    })
-
-    cache = null
-  }
-
-  static on(metaKey, metaValue, onNode, config = defaultConfiguration) {
-    setDefaults(config)
-    Iso.bootstrap((state, meta, node) => {
-      if (meta[metaKey] && meta[metaKey] === metaValue) {
-        onNode(state, meta, node)
-      }
-    }, config)
   }
 }

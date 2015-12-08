@@ -9,7 +9,13 @@ On the clientside Iso picks up what you sent down and gives it back to you so yo
 
 ## API
 
-### Iso#add(html: string, data: ?object, meta: ?object): this
+### constructor(name = '', renderer = defaultRenderer)
+
+The constructor takes in a `name` which is then used to build up a unique key for every added html,
+and a `renderer` which is used to determine how the data is prestented to the client. By default
+the renderer renders the markup into a div and the data into a script tag.
+
+### Iso#add(html: string, data: ?object): this
 
 You provide the markup to `add` and some data you wish to pass down, and iso will save it internally.
 
@@ -17,9 +23,23 @@ You provide the markup to `add` and some data you wish to pass down, and iso wil
 
 Once you're ready to collect your html you call `render` and a string will be returned to you.
 
-### Iso.bootstrap(onNode: function)
+### Iso.bootstrap(onNode: function, selector: function)
 
-This function takes a callback which is then called with the data, the meta, and a reference to the container node on the DOM.
+`onNode` is a function that is called with the data, and a reference to the container node on the
+DOM. The `selector` is a function that you can configure to find the state and nodes on the DOM
+and return them.
+
+The returned payload from `selector` should be an Object which contains the state and node pair
+for each unique key.
+
+```js
+{
+  "foobar": {
+    state: { name: "foo" },
+    node: DOMNode,
+  },
+}
+```
 
 ## Usage
 
@@ -27,32 +47,19 @@ Sample:
 
 ```js
 // server.js
-var iso = new Iso()
+const iso = new Iso()
 
 request.get('/', function (req, res) {
-  iso.add('<div>Hello, World!</div>', { someSampleData: 'Hello, World!' }, { id: 'hello' })
+  iso.add('<div>Hello, World!</div>', { someSampleData: 'Hello, World!' })
   res.render(iso.render())
 })
 
 // client.js
-Iso.bootstrap(function (state, meta, node) {
-  // Now I do something with this data, perhaps run it through some library and then append the result to node?
+Iso.bootstrap(function (state, node) {
+  // Now I do something with this data, perhaps run it through some library and then append
+  // the result to node?
 })
 ```
-
-## Examples
-
-## [datetime-flux](examples/datetime-flux)
-
-Datetime-flux is a minimal example showing how to render a React component on the server and then picking it back up on the client using flux implementation [alt](https://github.com/goatslacker/alt). It seeds the stores with initial data on the server and then bootstraps them back on the client. It includes a click handler which updates the time, this click handler is initialized on the client.
-
-## [iso-todomvc](examples/iso-todomvc)
-
-Iso-todomvc is todomvc written to work with [alt](https://github.com/goatslacker/alt). It is mostly the same code as [flux's todomvc](https://github.com/facebook/flux/tree/master/examples/flux-todomvc) and only a couple of lines in the view layer have changed. The bulk of the changes were in the store and actions, and the removal of the dispatcher and the constants since [alt](https://github.com/goatslacker/alt) handles those two for you.
-
-## [react-router-flux](examples/react-router-flux)
-
-React-router-flux is a minimal example showing how to use [react-router](https://github.com/rackt/react-router) and [alt](https://github.com/goatslacker/alt) in order to build isomorphic applications. The [client](examples/react-router-flux/client.js) file which handles the routing of components and the bootstrapping of stores is only 17 LOC.
 
 ## License
 
