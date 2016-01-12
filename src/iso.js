@@ -35,7 +35,7 @@ const defaultSelector = () => {
   }, {})
 }
 
-export default class Iso {
+module.exports = class Iso {
   constructor(name = '', renderer = defaultRenderer) {
     this.name = name
     this.renderer = renderer
