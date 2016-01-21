@@ -1,5 +1,14 @@
 const KEY_NAME = 'data-iso-key'
 
+const rLt = /</g
+const rGt = />/g
+const rLte = /&lt;/g
+const rGte = /&gt;/g
+const rEnc = /[<>]/
+const rDec = /&lt;|&gt;/
+
+const coerceToString = val => val ? String(val) : ''
+
 const defaultRenderer = {
   markup(html, key) {
     if (!html) return ''
@@ -22,7 +31,7 @@ const defaultSelector = () => {
 
     if (node.nodeName === 'SCRIPT') {
       try {
-        const state = JSON.parse(node.innerHTML)
+        const state = JSON.parse(Iso.decode(node.innerHTML))
         cache[key].state = state
       } catch (e) {
         cache[key].state = {}
@@ -44,7 +53,7 @@ export default class Iso {
   }
 
   add(html, _state = {}) {
-    const state = JSON.stringify(_state)
+    const state = Iso.encode(JSON.stringify(_state))
     this.html.push(html)
     this.data.push(state)
     return this
@@ -62,6 +71,26 @@ export default class Iso {
     }, '')
 
     return `${markup}\n${data}`
+  }
+
+  static encode(str) {
+    const val = coerceToString(str)
+
+    if (rEnc.test(val)) {
+      return val.replace(rLt, '&lt;').replace(rGt, '&gt;')
+    }
+
+    return val
+  }
+
+  static decode(str) {
+    const val = coerceToString(str)
+
+    if (rDec.test(val)) {
+      return val.replace(rLte, '<').replace(rGte, '>')
+    }
+
+    return val
   }
 
   static render(html, state = {}, name = '', renderer = defaultRenderer) {
