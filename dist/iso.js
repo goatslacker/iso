@@ -10,6 +10,17 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
 var KEY_NAME = 'data-iso-key';
 
+var rLt = /</g;
+var rGt = />/g;
+var rLte = /&lt;/g;
+var rGte = /&gt;/g;
+var rEnc = /[<>]/;
+var rDec = /&lt;|&gt;/;
+
+var coerceToString = function coerceToString(val) {
+  return val ? String(val) : '';
+};
+
 var defaultRenderer = {
   markup: (function () {
     function markup(html, key) {
@@ -39,7 +50,7 @@ var defaultSelector = function defaultSelector() {
 
     if (node.nodeName === 'SCRIPT') {
       try {
-        var state = JSON.parse(node.innerHTML);
+        var state = JSON.parse(Iso.decode(node.innerHTML));
         cache[key].state = state;
       } catch (e) {
         cache[key].state = {};
@@ -71,7 +82,7 @@ var Iso = (function () {
       function add(html) {
         var _state = arguments.length <= 1 || arguments[1] === undefined ? {} : arguments[1];
 
-        var state = JSON.stringify(_state);
+        var state = Iso.encode(JSON.stringify(_state));
         this.html.push(html);
         this.data.push(state);
         return this;
@@ -101,6 +112,36 @@ var Iso = (function () {
       return render;
     })()
   }], [{
+    key: 'encode',
+    value: (function () {
+      function encode(str) {
+        var val = coerceToString(str);
+
+        if (rEnc.test(val)) {
+          return val.replace(rLt, '&lt;').replace(rGt, '&gt;');
+        }
+
+        return val;
+      }
+
+      return encode;
+    })()
+  }, {
+    key: 'decode',
+    value: (function () {
+      function decode(str) {
+        var val = coerceToString(str);
+
+        if (rDec.test(val)) {
+          return val.replace(rLte, '<').replace(rGte, '>');
+        }
+
+        return val;
+      }
+
+      return decode;
+    })()
+  }, {
     key: 'render',
     value: (function () {
       function render(html) {

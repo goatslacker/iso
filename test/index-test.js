@@ -147,4 +147,20 @@ export default {
       done()
     })
   },
+
+  'state that contains </script>': (done) => {
+    const serverState = { foo: '</script>' }
+    const html = '<h2>It works!</h2>'
+
+    const markup = Iso.render(html, serverState)
+    global.document = jsdom(markup)
+
+    Iso.bootstrap((state, node) => {
+      assert(state.foo === '</script>', 'the state was properly decoded')
+      assert(node.innerHTML === html, 'the html was retrieved correctly')
+
+      delete global.document
+      done()
+    })
+  },
 }
