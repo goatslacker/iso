@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.5.1
+
+Iso is now escaping state information by default again.
+
+The following tokens are escaped: `<` and `>`. If you need to escape any other
+tokens you should do so yourself.
+
 ## 0.5.0
 
 ### Breaking Changes
