@@ -6,12 +6,16 @@
   "author": "Josh Perez <josh@goatslacker.com>",
   "license": "MIT",
   "scripts": {
-    "build": "babel ./src/iso.js > dist/iso.js; uglifyjs dist/iso.js -m > dist/iso.min.js",
+    "build": "npm run build:core && npm run build:web",
+    "build:core": "babel ./src/core.js -o core.js",
+    "build:web": "webpack --config web.config.js && webpack --config min.config.js",
     "lint": "eslint src",
     "test": "babel-node node_modules/.bin/_mocha -u exports test/*-test.js"
   },
   "devDependencies": {
     "babel-cli": "6.2.0",
+    "babel-core": "6.7.2",
+    "babel-loader": "6.2.4",
     "babel-preset-airbnb": "1.0.1",
     "chai": "3.4.1",
     "cheerio": "0.19.0",
@@ -20,7 +24,7 @@
     "eslint-plugin-react": "3.11.2",
     "jsdom": "7.1.1",
     "mocha": "2.3.4",
-    "uglify-js": "2.4.24"
+    "webpack": "1.12.14"
   },
   "repository": {
     "type": "git",
