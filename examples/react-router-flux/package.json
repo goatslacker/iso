@@ -11,15 +11,18 @@
   "author": "Josh Perez <josh@goatslacker.com>",
   "license": "MIT",
   "dependencies": {
-    "alt": "^0.10.2",
+    "alt": "^0.18.3",
     "express": "^4.11.2",
+    "history": "^1.17.0",
+    "iso": "^5.2.0",
     "jade": "^1.8.2",
-    "node-jsx": "^0.12.4",
-    "react": "^0.12.2",
-    "react-router": "^0.11.6"
+    "node-jsx": "^0.13.3",
+    "react": "^0.14.7",
+    "react-dom": "^0.14.7",
+    "react-router": "^1.0.3"
   },
   "devDependencies": {
-    "browserify": "^8.0.3",
-    "reactify": "^0.17.1"
+    "browserify": "^13.0.0",
+    "reactify": "^1.1.1"
   }
 }
