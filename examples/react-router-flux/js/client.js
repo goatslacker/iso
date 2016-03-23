@@ -1,4 +1,4 @@
-var Iso = require('iso').default
+var Iso = require('../../../')
 
 var ReactRouter = require('react-router')
 var React = require('react')

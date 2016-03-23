@@ -5,7 +5,7 @@ var ReactDOMServer = require('react-dom/server')
 
 var ReactRouter = require('react-router')
 var express = require('express')
-var Iso = require('iso').default
+var Iso = require('../../')
 
 var createLocation = require('history/lib/createLocation')
 
