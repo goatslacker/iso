@@ -1,3 +1,11 @@
+# Unmaintained/Deprecated
+
+Hi everyone! Airbnb was using this module for their server-rendering and client bootstrapping but have since moved to and open sourced [Hypernova](https://github.com/airbnb/hypernova) which is a service that server renders your JS views but also includes some browser JS which does the server to client bootstrapping.
+
+So this package/repo is now unmaintained and deprecated. I encourage you to check out Hypernova since it has very similar features.
+
+--
+
 # Iso
 
 [![Gitter](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/goatslacker/iso?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
