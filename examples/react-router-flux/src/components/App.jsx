@@ -1,15 +1,15 @@
 var React = require('react')
-var { RouteHandler, Link } = require('react-router')
+var Link  = require('react-router').Link
 
 var App = React.createClass({
   render() {
     return (
       <div>
-        <Link to='hello'>Say hi</Link>
+        <Link to='/hello'>Say hi</Link>
         <br />
-        <Link to='time'>What time is it?</Link>
+        <Link to='/time'>What time is it?</Link>
         <br />
-        <RouteHandler {...this.props} />
+        {this.props.children}
       </div>
     )
   }

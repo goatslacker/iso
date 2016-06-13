@@ -1,9 +1,13 @@
 require('node-jsx').install({ extension: '.jsx', harmony: true })
 
-var Router = require('react-router')
 var React = require('react')
+var ReactDOMServer = require('react-dom/server')
+
+var ReactRouter = require('react-router')
 var express = require('express')
 var Iso = require('../../')
+
+var createLocation = require('history/lib/createLocation')
 
 var routes = require('./src/routes')
 var alt = require('./src/alt')
@@ -55,15 +59,25 @@ app.get('/time', function (req, res, next) {
 app.use(function (req, res) {
   alt.bootstrap(JSON.stringify(res.locals.data || {}))
 
+  var location = createLocation(req.url)
   var iso = new Iso()
 
-  Router.run(routes, req.url, function (Handler) {
-    var content = React.renderToString(React.createElement(Handler))
-    iso.add(content, alt.flush())
+  ReactRouter.match({routes: routes, location: location}, function(error, redirectLocation, renderProps) {
+    if (error) {
+      res.status(500).sendStatus(error.message)
+    } else if (redirectLocation) {
+      res.status(302).sendStatus(redirectLocation.pathname + redirectLocation.search)
+    } else if (renderProps) {
+      var content = ReactDOMServer.renderToString(React.createElement(ReactRouter.RoutingContext, renderProps))
+      iso.add(content, alt.flush())
 
-    res.render('layout', {
-      html: iso.render()
-    })
+      res.render('layout', {
+        html: iso.render()
+      })
+    } else {
+      res.status(404).sendStatus('Not found')
+    }
+
   })
 })
 
